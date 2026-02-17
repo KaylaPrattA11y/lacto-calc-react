@@ -15,6 +15,7 @@ import Tagger from "../Tagger";
 type PresetUnit = 'grams' | 'ounces' | 'other';
 
 export default function Calculator() {
+  const masonJarSrc = new URL("../../assets/mason-jar.png", import.meta.url).href;
   const formRef = useRef<HTMLFormElement|null>(null);
   const [weight, setWeight] = useState<number|null>(null);
   const [presetUnit, setPresetUnit] = useState<PresetUnit>('grams');
@@ -260,7 +261,7 @@ export default function Calculator() {
         </div>
         <div className="grid-output">
           <div className="calculator-output">
-            <img src="/mason-jar.png" alt="" aria-hidden="true" />
+            <img src={masonJarSrc} alt="" aria-hidden="true" />
             {saltRequired != null && saltRequired > 0 ? (
             <div>
               <div>
