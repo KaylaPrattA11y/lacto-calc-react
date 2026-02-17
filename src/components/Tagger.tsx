@@ -48,7 +48,11 @@ export default function Tagger({ onChangeTags, ...inputProps }: TaggerProps) {
           setInputValue(e.target.value);
         }}
         onKeyDown={e => {
-          if (["Enter", "Comma"].includes(e.code)) {
+          // Detect Enter and comma (desktop + mobile keyboards)
+          const isEnter = e.key === 'Enter' || ["Enter", "NumpadEnter"].includes(e.code);
+          const isComma = e.key === ',' || e.code === 'Comma';
+
+          if (isEnter || isComma) {
             e.preventDefault();
             handleAddTag();
           }

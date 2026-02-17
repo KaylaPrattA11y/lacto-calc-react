@@ -19,7 +19,7 @@ import "../scss/site.scss";
 	<body id="root">
 		<slot />
 		<script>
-			if ('serviceWorker' in navigator) {
+			if (import.meta.env.PROD && 'serviceWorker' in navigator) {
 				window.addEventListener('load', () => {
 					// Use Astro/Vite base URL so this works with GitHub Pages base path
 					navigator.serviceWorker.register(import.meta.env.BASE_URL + 'service-worker.js');

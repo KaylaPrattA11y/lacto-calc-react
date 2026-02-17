@@ -262,20 +262,24 @@ export default function Calculator() {
           <div className="calculator-output">
             <img src="/mason-jar.png" alt="" aria-hidden="true" />
             {saltRequired != null && saltRequired > 0 ? (
-            <>
-            <output htmlFor="weight brine-percentage" id="salt-required">{saltWeightFormatted}</output>
-            <div>{unit} salt required</div>
-            <Details summary="What now?">
-              <p>Add the salt to your vegetables/fruits that are submerged in water in your fermenting vessel.</p>
-              <p>Close the lid tight and give it a good shake to distribute the salt evenly, then loosen the lid or add your airlock.</p>
-            </Details>
-            <div className="calculator-submit">
-              <button type="submit" className="is-primary"><HiPlus size={16} /> Add ferment</button>
-              <button type="reset" className="is-tertiary">Reset</button>
+            <div>
+              <div>
+                <output htmlFor="weight brine-percentage" id="salt-required">{saltWeightFormatted}</output>
+                <div>{unit} salt required</div>
+                <Details summary="What now?">
+                  <p>Add the salt to your vegetables/fruits that are submerged in water in your fermenting vessel.</p>
+                  <p>Close the lid tight and give it a good shake to distribute the salt evenly, then loosen the lid or add your airlock.</p>
+                </Details>
+              </div>
+              <div className="calculator-submit">
+                <button type="submit" className="is-primary"><HiPlus size={16} /> Add ferment</button>
+                <button type="reset" className="is-tertiary">Reset</button>
+              </div>
             </div>
-            </>
             ) : (
-            <div>Please enter <strong>Salt brine</strong> percentage and <strong>Weight</strong> to calculate salt required.</div>
+            <div>
+              <p>Please enter <strong>Salt brine</strong> percentage and <strong>Weight</strong> to calculate salt required.</p>
+            </div>
             )}
           </div>
         </div>

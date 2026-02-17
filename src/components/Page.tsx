@@ -70,10 +70,10 @@ export default function Page({ pageTitle, children }: { pageTitle: string; child
         />
         {children}
         <ToastContainer theme="dark" />
-        <InstallPwaPrompt />
       </main>
       <footer className="site-footer">
         <small>This little tool was created by Kayla Pratt. <a href="https://github.com/KaylaPrattA11y/lacto-calc-react" target="_blank" rel="noopener noreferrer">View on Github</a></small>
+        <InstallPwaPrompt />
       </footer>
     </div>
     )

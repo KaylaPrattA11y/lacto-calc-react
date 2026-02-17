@@ -1,6 +1,9 @@
 @layer components {
   .calculator {
     container: calculator / inline-size;
+    &:has(input:focus-within, textarea:focus-within, select:focus-within) .grid-output {
+      position: static;
+    }
   }
   .calculator-grid {
     display: grid;
@@ -72,7 +75,7 @@
     box-sizing: border-box;
     -webkit-mask: var(--mask-top);
     mask: var(--mask-top);
-    padding: 2rem 2rem 1rem;
+    padding: 2rem 1rem 1rem;
     background-color: var(--border-color);
     @container calculator (width >= 500px) {
       -webkit-mask: var(--mask);

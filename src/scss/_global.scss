@@ -81,6 +81,11 @@
   .site-footer {
     text-align: center;
     padding: 0.5rem 1rem;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    align-items: baseline;
   }
 }
 
