@@ -1,5 +1,5 @@
 import React, { useRef, useState, useMemo, useEffect } from "react";
-import { HiPlus, HiBadgeCheck } from "react-icons/hi";
+import { HiPlus, HiBadgeCheck, HiExclamationCircle } from "react-icons/hi";
 import Input from '../Input';
 import RadioFieldset from "../RadioFieldset";
 import CheckboxFieldset from "../CheckboxFieldset";
@@ -11,6 +11,7 @@ import Details from "../Details";
 import { getDuration, getFermentStatus } from "../../utils/time";
 import { toast } from "react-toastify";
 import Tagger from "../Tagger";
+import requestNotificationPermission from "../../utils/requestNotificationPermission";
 
 type PresetUnit = 'grams' | 'ounces' | 'other';
 
@@ -26,6 +27,7 @@ export default function Calculator() {
   const [notes, setNotes] = useState<string>('');
   const [fermentDateRange, setFermentDateRange] = useState<RangeValue<DateValue>|null>(null);
   const [sendNotification, setFermentNotification] = useState<boolean>(false);
+  const [showNotificationCheckbox, setShowNotificationCheckbox] = useState<boolean>(true);
   const [fermentTags, setFermentTags] = useState<Set<string>>(new Set());
   const [taggerKey, setTaggerKey] = useState<number>(0);
   // Removed localData state; only use localStorage for persistence
@@ -235,7 +237,7 @@ export default function Calculator() {
           {fermentDateRange && dateStart && dateEnd && (
             <div>Duration: {getDuration(dateStart, dateEnd)}</div>
           )}
-          {fermentDateRange && getFermentStatus(dateStart, dateEnd) !== "Complete" && (
+          {showNotificationCheckbox && fermentDateRange && getFermentStatus(dateStart, dateEnd) !== "Complete" && (
           <CheckboxFieldset 
             legend="Fermentation completion reminder" 
             showLegend={false}
@@ -245,13 +247,22 @@ export default function Calculator() {
                 id: "sendNotification",
                 name: "sendNotification",
                 value: "true",
-                onChange: (e) => {
+                onChange: async (e) => {
                   const isChecked = e.currentTarget.checked;
                   setFermentNotification(isChecked);
                   // Request notification permission when checkbox is enabled
                   if (isChecked && 'Notification' in window) {
                     if (Notification.permission === 'default') {
-                      Notification.requestPermission();
+                      await requestNotificationPermission({
+                        onPermissionDenied: () => {
+                          setShowNotificationCheckbox(false);
+                          setFermentNotification(false);
+                          toast.error('Notification permissions denied. Unable to schedule completion reminder.', {
+                            position: "bottom-right",
+                            icon: <HiExclamationCircle size="24px" />
+                          });
+                        }
+                      });
                     }
                   }
                 },

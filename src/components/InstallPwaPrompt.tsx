@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { HiDeviceMobile, HiBell } from 'react-icons/hi';
+import requestNotificationPermission from '../utils/requestNotificationPermission';
 
 declare global {
   interface Window {
@@ -17,7 +18,7 @@ export default function InstallPwaPrompt() {
   const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [showNotificationButton, setShowNotificationButton] = useState<boolean>(false);
 
-  async function handleInstallClick() {
+  const handleInstallClick = useCallback(async () => {
     if (!installPromptEvent) {
       if (import.meta.env.DEV) {
         console.log('No installPromptEvent – beforeinstallprompt never fired');
@@ -31,45 +32,24 @@ export default function InstallPwaPrompt() {
     }
     setInstallPromptEvent(null);
     setShowButton(false);
-  }
+  }, [installPromptEvent]);
 
-  async function handleNotificationPermission() {
+  const handleNotificationPermission = useCallback(async () => {
     if (!('Notification' in window)) {
       if (import.meta.env.DEV) {
         console.log('Browser does not support notifications');
       }
       return;
     }
-
-    if (Notification.permission === 'granted') {
-      if (import.meta.env.DEV) {
-        console.log('Notification permission already granted');
-      }
-      setShowNotificationButton(false);
-      return;
-    }
-
-    if (Notification.permission === 'denied') {
-      if (import.meta.env.DEV) {
-        console.log('Notification permission was denied');
-      }
-      return;
-    }
-
-    try {
-      const permission = await Notification.requestPermission();
-      if (import.meta.env.DEV) {
-        console.log('Notification permission result:', permission);
-      }
-      if (permission === 'granted') {
+    await requestNotificationPermission({
+      onPermissionGranted: () => {
+        setShowNotificationButton(false);
+      },
+      onPermissionDenied: () => {
         setShowNotificationButton(false);
       }
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Error requesting notification permission:', error);
-      }
-    }
-  }
+    });
+  }, []);
 
   useEffect(() => {
     const installPromptHandler = (event: Event) => {
