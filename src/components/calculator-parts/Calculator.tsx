@@ -90,7 +90,8 @@ export default function Calculator() {
       window.dispatchEvent(new Event('fermentDataUpdated'));
     }
     toast.success('Ferment added successfully!', {
-      icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />
+      icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
+      position: "bottom-right"
     });
   }
 

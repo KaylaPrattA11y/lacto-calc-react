@@ -20,10 +20,13 @@ export default function importFermentEntries(setData: SetFermentData) {
         // Dispatch custom event to notify FermentList of new data
         window.dispatchEvent(new Event('fermentDataUpdated'));
         toast.success('Ferment data imported successfully.', {
-          icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />
+          icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
+          position: "bottom-right",
         });
       } catch (error) {
-        toast.error('Failed to import ferment data. Please ensure the file is a valid JSON.');
+        toast.error('Failed to import ferment data. Please ensure the file is a valid JSON.', {
+          position: "bottom-right",
+        });
         throw new Error('Invalid JSON file', error as Error);
       }
     };

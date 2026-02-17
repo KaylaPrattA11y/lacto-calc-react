@@ -1,7 +1,18 @@
 import React from "react";
-import type { IconButtonProps } from "../types";
 
-export default function IconButton({label, children, size, variant, ...rest} : IconButtonProps) {
+type IconButtonAlignment = "top" | "bottom";
+type IconButtonSizes = 'md' | 'sm';
+type IconButtonVariants = 'primary' | 'secondary';
+
+interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  label: string;
+  children: React.ReactNode;
+  size?: IconButtonSizes;
+  variant?: IconButtonVariants;
+  alignment?: IconButtonAlignment;
+}
+
+export default function IconButton({label, children, size, variant, alignment = "top", ...rest} : IconButtonProps) {
   function getClassList() {
     const classList = ["icon-button"];
     if (variant) {
@@ -15,6 +26,7 @@ export default function IconButton({label, children, size, variant, ...rest} : I
   return (
     <button 
       className={getClassList()}
+      data-alignment={alignment}
       {...rest} 
       aria-label={label}
     >

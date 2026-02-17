@@ -21,13 +21,6 @@ declare global {
 
 export type FermentStatus = 'Planned' | 'Active' | 'Complete' | undefined;
 
-export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  label: string;
-  children: React.ReactNode;
-  size?: 'md' | 'sm';
-  variant?: 'primary' | 'secondary';
-}
-
 export type SetFermentData = React.Dispatch<React.SetStateAction<FermentEntry[]>>;
 
 export type FermentEntry = {

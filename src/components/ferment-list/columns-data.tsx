@@ -155,6 +155,7 @@ export default function getColumnsData({columnHelper, data, setData}: ColumnsDat
               toast.warning(DeleteEntryToast, {
                 autoClose: false,
                 icon: <HiExclamation size="24px" />,
+                position: "top-right",
                 onOpen() {
                   // Keep the row highlighted while the toast is open
                   if (rowElement) {
@@ -174,11 +175,13 @@ export default function getColumnsData({columnHelper, data, setData}: ColumnsDat
                       localStorage.setItem('fermentData', JSON.stringify(newData));
                       if (fermentName) {
                         toast.success(`Deleted ferment: ${fermentName}`, {
-                          icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />
+                          icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
+                          position: "bottom-right",
                         });
                       } else {
                         toast.success(`Deleted ferment entry.`, {
-                          icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />
+                          icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
+                          position: "bottom-right",
                         });
                       }
                       break;

@@ -46,7 +46,8 @@ export default function FermentListHeader({data, setData}: {data: FermentEntry[]
     // Dispatch custom event to notify FermentList of data deletion
     window.dispatchEvent(new Event('fermentDataUpdated'));
     toast.success('All ferments deleted successfully.', {
-      icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />
+      icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
+      position: "bottom-right",
     });
   }
   function exportFermentEntries() {
@@ -59,7 +60,8 @@ export default function FermentListHeader({data, setData}: {data: FermentEntry[]
     a.click();
     URL.revokeObjectURL(url);
     toast.success('Ferment data exported successfully.', {
-      icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />
+      icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
+      position: "bottom-right",
     });
   }
 
@@ -70,6 +72,7 @@ export default function FermentListHeader({data, setData}: {data: FermentEntry[]
           label="Export (.json)"
           variant="primary"
           size="sm"
+          alignment="bottom"
           onClick={exportFermentEntries}
         >
           <HiOutlineDownload size={18} />
@@ -78,10 +81,12 @@ export default function FermentListHeader({data, setData}: {data: FermentEntry[]
           label="Import (.json)"
           variant="secondary"
           size="sm"
+          alignment="bottom"
           onClick={() => {
             toast.warning(ImportEntriesToast, {
               autoClose: false,
               icon: <HiExclamation size="24px" />,
+              position: "top-right",
               onClose(reason) {
                 switch (reason) {
                   case "import":
@@ -102,11 +107,13 @@ export default function FermentListHeader({data, setData}: {data: FermentEntry[]
           label="Delete all"
           variant="secondary"
           size="sm"
+          alignment="bottom"
           onClick={() => {
 
             toast.warning(DeleteEntriesToast, {
               autoClose: false,
               icon: <HiExclamation size="24px" />,
+              position: "top-right",
               onClose(reason) {
                 switch (reason) {
                   case "export-delete-all":
