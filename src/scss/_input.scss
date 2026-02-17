@@ -1,0 +1,22 @@
+@layer components {
+  .input-group {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: auto min-content;
+    align-items: center;
+  }
+  .input-addon {
+    color: var(--text-muted-color);
+  }
+  .input {
+    .help-text > p:first-of-type {
+      margin-block-start: 0;
+    }
+  }
+  .input-description {
+    font-size: 0.875rem;
+    color: var(--text-muted-color);
+    margin-block-start: 0.25rem;
+    margin-block-end: 0.5rem;
+  }
+}

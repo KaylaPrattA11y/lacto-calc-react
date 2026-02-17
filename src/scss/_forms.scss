@@ -1,0 +1,29 @@
+@use "abstracts/mixins/form-controls" as form-controls;
+
+@layer base {
+  input:is([type="number"], [type="text"], [type="search"]) {
+    inline-size: 100%;
+    box-sizing: border-box;
+  }
+  input:is([type="radio"], [type="checkbox"]) {
+    block-size: 18px;
+    inline-size: 18px;
+    margin: 0;
+  }
+  fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  input {
+    accent-color: var(--accent-color);
+  }
+  :where(input:is([type="number"], [type="text"], [type="search"]), textarea, select) {
+    @include form-controls.base;
+    &.is-sm {
+      --block-size: 27px;
+      --font-size: 14px;
+      --padding: 0 0.25rem;
+    }
+  }
+}

@@ -1,0 +1,15 @@
+@mixin base {
+  --block-size: auto;
+  --font-size: inherit;
+  --padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--padding);
+  color: var(--text-color);
+  background-color: var(--input-background-color);
+  font-size: var(--font-size);
+  font-family: inherit;
+  inline-size: 100%;
+  box-sizing: border-box;
+  block-size: var(--block-size);
+}

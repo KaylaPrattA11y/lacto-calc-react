@@ -1,0 +1,21 @@
+@layer components {
+  .badge {
+    display: inline-block;
+    padding: 0.25em 0.5em;
+    border-radius: 0.25em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #fff;
+    line-height: normal;
+    &.is-planned {
+      background-color: var(--dark-teal);
+    }
+    &.is-active {
+      background-color: var(--lobster-pink); 
+    }
+    &.is-complete {
+      background-color: var(--tealy-green); 
+    }
+  }
+}

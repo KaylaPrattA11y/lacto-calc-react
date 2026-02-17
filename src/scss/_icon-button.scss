@@ -1,0 +1,17 @@
+@layer components {
+  .icon-button {
+    position: relative;
+    &::after {
+      position: absolute;
+      inset: 0 auto auto 50%;
+      translate: -50% -95%;
+      color: var(--input-background-color);
+      background-color: var(--text-color);
+      border-radius: var(--border-radius);
+      padding: 0.15rem 0.25rem;
+    }
+    &:hover::after {
+      content: attr(aria-label);
+    }
+  }
+}

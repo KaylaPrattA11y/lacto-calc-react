@@ -1,0 +1,85 @@
+@layer components {
+  .ferment-list {
+    container: ferment-list / inline-size;
+    border-collapse: collapse;
+    inline-size: 100%;
+    th {
+      text-align: left;
+    }
+    :where(th, td) {
+      padding: 0.5rem;
+      border-block-end: 1px solid var(--border-color);
+      vertical-align: top;
+      > .ferment-list--cell {
+        max-inline-size: 35ch;
+      }
+    }
+    &--header,
+    &--filters {
+      justify-content: center;
+      @container tabpanel (width >= 500px) {
+        justify-content: flex-end;
+      }
+    }
+    &--header {
+      margin-block-end: 1rem;
+      display: flex;
+      align-items: center;
+      > h2 {
+        margin: 0;
+      }
+    }
+    &--actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+    &--filters {
+      display: grid;
+      gap: 0.5rem;
+      grid-template-columns: auto auto;
+    }
+    &--pagination {
+      margin-block-start: 1rem;
+    }
+    &--pagination-controls {
+      display: flex;
+      justify-content: center;
+      gap: 0.25rem;
+    }
+    &--footer {
+      margin-block-start: 0.5rem;
+      text-align: center;
+      display: grid;
+      justify-content: center;
+      align-items: center;
+      grid-template-columns: max-content max-content max-content;
+      gap: 0.25rem;
+      > div:not(:last-child)::after {
+        content: " | ";
+      }
+    }
+    &--pagination-quicknav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    &--narrow-cell {
+      display: grid;
+      gap: 0.25rem;
+      justify-items: start;
+      line-height: 1.4;
+    }
+  }
+}
+@layer utilities {
+  .highlight-row {
+    td:first-child {
+      outline: 2px solid var(--accent-color);
+      border-radius: var(--border-radius);
+    }
+    background-color: var(--border-color);
+    transition: background-color 0.3s;
+  }
+}

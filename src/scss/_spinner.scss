@@ -1,0 +1,33 @@
+@layer components {
+  .spinner {
+    --size: 64px;
+    inline-size: 100%;
+    display: grid;
+    justify-content: center;
+    align-self: center;
+    color: var(--text-color);
+  }
+  .spinner,
+  .spinner::after {
+    box-sizing: border-box;
+  }
+  .spinner::after {
+    content: " ";
+    display: block;
+    width: var(--size);
+    height: var(--size);
+    margin: 8px;
+    border-radius: 50%;
+    border: 6.4px solid currentColor;
+    border-color: currentColor transparent currentColor transparent;
+    animation: spinner 1.2s linear infinite;
+  }
+  @keyframes spinner {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}

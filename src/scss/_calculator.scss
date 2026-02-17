@@ -1,0 +1,120 @@
+@layer components {
+  .calculator {
+    container: calculator / inline-size;
+  }
+  .calculator-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-areas: 
+      "brine" 
+      "salt" 
+      "fName" 
+      "fDate" 
+      "fNotes"
+      "output";
+    @container calculator (width >= 500px) {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: 
+        "brine output"
+        "salt output"
+        "fName fDate"
+        "fNotes fNotes";
+    }
+    @container calculator (width >= 900px) {
+      gap: 1rem 2rem;
+      grid-template-columns: 1fr 1fr 1fr; 
+      grid-template-areas: 
+        "brine salt output" 
+        "fName fDate output" 
+        "fNotes fNotes output";
+    }
+  }
+  .grid {
+    &-brine {
+      grid-area: brine;
+    }
+    &-salt {
+      container: salt-fieldset / inline-size;
+      grid-area: salt;
+    }
+    &-output {
+      grid-area: output;
+      @container calculator (width < 500px) {
+        position: sticky;
+        bottom: 0;
+        inline-size: calc(100% + calc(var(--page-main-padding) * 2));
+        margin-inline-start: calc(var(--page-main-padding) * -1);
+        margin-block-end: calc(var(--page-main-padding) * -1);
+      }
+    }
+    &-fName {
+      grid-area: fName;
+    }
+    &-fDate {
+      grid-area: fDate;
+      display: grid;
+      gap: 0.5rem;
+      align-content: start;
+    }
+    &-fNotes {
+      grid-area: fNotes;
+      display: grid;
+      gap: 1rem;
+    }
+  }
+  .calculator-output {
+    position: relative;
+    display: grid;
+    gap: 0.25rem;
+    text-align: center;
+    block-size: 100%;
+    align-content: center;
+    box-sizing: border-box;
+    -webkit-mask: var(--mask-top);
+    mask: var(--mask-top);
+    padding: 2rem 2rem 1rem;
+    background-color: var(--border-color);
+    @container calculator (width >= 500px) {
+      -webkit-mask: var(--mask);
+      mask: var(--mask);
+      padding: 1rem 2rem 2rem;
+      border-radius: var(--border-radius);
+    }
+    img {
+      position: absolute;
+      inline-size: 95%;
+      inset: -1rem auto auto 50%;
+      translate: -50% 0;
+      opacity: 0.1;
+      z-index: -1;
+    }
+    output {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .details--summary {
+      justify-content: center;
+    }
+  }
+  .calculator-submit {
+    display: grid;
+    gap: 0.5rem;
+    // position: sticky;
+    // bottom: 0;
+    // padding-block: 1rem;
+    // justify-content: flex-end;
+    // background-color: var(--background-color);
+    // @container calculator (width < 500px) {
+      button {
+        inline-size: 100%;
+      }
+    // }
+  }
+  .salt-calc-grid {
+    display: grid;
+    gap: 1rem;
+    @container salt-fieldset (width >= 300px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}

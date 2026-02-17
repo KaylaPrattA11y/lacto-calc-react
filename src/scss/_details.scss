@@ -1,0 +1,29 @@
+@layer components {
+  .details {
+    font-size: 0.85rem;
+    &--summary {
+      cursor: pointer;
+      padding-block: 0.5rem;
+      display: flex;
+      gap: 0.25rem;
+      align-items: center;
+    }
+    &--summary:hover {
+      text-decoration: underline;
+    }
+    &--summary::marker {
+      content: none;
+    }
+    &--content {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 250ms ease;
+    }
+    &--content > div {
+      overflow: hidden;
+    }
+    &[open] .details--content {
+      grid-template-rows: 1fr;
+    }
+  }
+}

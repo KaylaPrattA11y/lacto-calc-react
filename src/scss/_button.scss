@@ -1,0 +1,43 @@
+@layer base {
+  button {
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 0.5rem 1rem;
+    font-size: inherit;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    gap: 0.25rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+@layer components {
+  button.is-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+  }
+  button.is-secondary {
+    background-color: var(--button-secondary-background-color);
+    color: var(--button-secondary-color);
+  }
+  button.is-primary {
+    background-color: var(--button-primary-background-color);
+    color: var(--button-primary-color);
+  }
+  button.is-tertiary {
+    background-color: var(--button-tertiary-background-color);
+    color: var(--button-tertiary-color);
+  }
+  .btn-group {
+    display: flex;
+    gap: 0.5rem;
+  }
+}

@@ -1,0 +1,10 @@
+@use "abstracts/mixins/tags" as tags;
+
+@layer components {
+  .tags {
+    @include tags.list;
+    > li {
+      @include tags.item;
+    }
+  }
+}

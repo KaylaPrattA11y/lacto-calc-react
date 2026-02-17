@@ -1,0 +1,16 @@
+@use "abstracts/mixins/tags" as tags;
+
+@layer components {
+  .tagger {
+    &--tag {
+      display: inline-block;
+    }
+    &--list {
+      @include tags.list;
+      margin-block-start: 0.5rem;
+    }
+    &--tag-button {
+      @include tags.item;
+    }
+  }
+}

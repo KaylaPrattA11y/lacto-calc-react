@@ -1,0 +1,16 @@
+@mixin list() {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+@mixin item() {
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  font-size: 0.75rem;
+  background-color: var(--button-secondary-background-color);
+  color: var(--button-secondary-color);
+}

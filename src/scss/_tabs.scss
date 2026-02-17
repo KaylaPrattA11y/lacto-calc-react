@@ -1,0 +1,68 @@
+@layer components {
+  .tabs {
+    --background-color: var(--dark-teal);
+    --active-background-color: var(--deep-space-blue);
+    background-color: var(--active-background-color);
+    block-size: 100%;
+    &--tablist {
+      display: flex;
+      background-color: var(--background-color);
+    }
+    &--tab {
+      padding: 1rem;
+      background-color: transparent;
+      border: 0;
+      transition: background-color 300ms;
+      inline-size: 100%;
+      appearance: none;
+      font-size: 1rem;
+      font-family: var(--font-family-secondary);
+      font-weight: 700;
+      > * {
+        margin: 0;
+        font-size: inherit;
+        font-family: inherit;
+        font-weight: inherit;
+      }
+      &[aria-selected="true"] {
+        color: var(--text-color);
+        background-color: var(--active-background-color);
+      }
+      &[aria-selected="false"] {
+        color: var(--text-muted-color);
+        cursor: pointer;
+      }
+      &:focus-visible {
+        outline: 1px solid black;
+        outline-offset: -2px;
+      }
+    }
+    &--tabpanels {
+      background-color: var(--active-background-color);
+    }
+    &--tabpanel {
+      container: tabpanel / inline-size;
+      padding: 1rem;
+    }
+    &--tabpanel:focus-visible {
+      outline: 1px solid black;
+      outline-offset: -2px;
+    }
+    &.is-horizontal {
+      > [role="tablist"] > [role="tab"]:not(:last-of-type) {
+        border-inline-end: 1px solid color-mix(in srgb, var(--background-color) 80%, black);
+      }
+    }
+    &.is-vertical {
+      display: grid;
+      grid-template-columns: minmax(50px, 150px) auto;
+      > [role="tablist"] {
+        display: grid;
+        grid-template-rows: min-content min-content;
+      }
+      > [role="tablist"] > [role="tab"]:not(:last-of-type) {
+        border-block-end: 1px solid color-mix(in srgb, var(--background-color) 80%, black);
+      }
+    }
+  }
+}

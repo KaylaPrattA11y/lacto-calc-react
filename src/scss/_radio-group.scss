@@ -1,0 +1,11 @@
+@layer components {
+  .radio-group {
+    display: grid;
+    gap: 0.5rem;
+    > div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+}

@@ -1,0 +1,19 @@
+:root {
+  --toastify-toast-width: max-content;
+  --toastify-font-family: "Montserrat Alternates", sans-serif;
+}
+@layer components {
+  .toast-cta {
+    display: grid;
+    grid-template-columns: minmax(150px, 250px) max-content;
+    &--message {
+      align-self: center;
+      font-size: 0.9rem;
+    }
+    &--actions {
+      display: grid;
+      gap: 0.25rem;
+      padding-inline: 1rem;
+    }
+  }
+}
