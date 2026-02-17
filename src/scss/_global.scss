@@ -87,6 +87,11 @@
     justify-content: center;
     align-items: baseline;
   }
+  .install-pwa-prompt {
+    display: grid;
+    gap: 0.5rem;
+    justify-content: center;
+  }
 }
 
 @layer utilities {

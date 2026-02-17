@@ -109,7 +109,6 @@ export default function FermentListHeader({data, setData}: {data: FermentEntry[]
           size="sm"
           alignment="bottom"
           onClick={() => {
-
             toast.warning(DeleteEntriesToast, {
               autoClose: false,
               icon: <HiExclamation size="24px" />,

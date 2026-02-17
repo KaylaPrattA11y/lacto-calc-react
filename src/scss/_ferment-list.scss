@@ -14,6 +14,11 @@
         max-inline-size: 35ch;
       }
     }
+    &--badges {
+      display: flex;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
     &--header,
     &--filters {
       justify-content: center;

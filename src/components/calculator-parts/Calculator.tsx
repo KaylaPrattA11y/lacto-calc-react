@@ -66,6 +66,7 @@ export default function Calculator() {
   function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     if (!formRef.current) return;
+    let toastMessage = 'Ferment added successfully!';
     const stored = localStorage.getItem('fermentData');
     const parsed: FermentEntry[] = stored ? JSON.parse(stored) : [];
     const newData = [
@@ -85,11 +86,24 @@ export default function Calculator() {
         tags: [...fermentTags]
       }
     ];
+
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.setItem('fermentData', JSON.stringify(newData));
       window.dispatchEvent(new Event('fermentDataUpdated'));
     }
-    toast.success('Ferment added successfully!', {
+    if (sendNotification) {
+      toastMessage += ' A notification will be sent when this ferment is complete.';
+      // Send notification scheduling to service worker
+      if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+        navigator.serviceWorker.controller?.postMessage({
+          type: 'SCHEDULE_FERMENT_NOTIFICATION',
+          payload: {
+            ferment: newData[newData.length - 1]
+          }
+        });
+      }
+    }
+    toast.success(toastMessage, {
       icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
       position: "bottom-right"
     });
@@ -221,7 +235,7 @@ export default function Calculator() {
           {fermentDateRange && dateStart && dateEnd && (
             <div>Duration: {getDuration(dateStart, dateEnd)}</div>
           )}
-          {fermentDateRange && import.meta.env.DEV && (
+          {fermentDateRange && getFermentStatus(dateStart, dateEnd) !== "Complete" && (
           <CheckboxFieldset 
             legend="Fermentation completion reminder" 
             showLegend={false}
@@ -231,7 +245,16 @@ export default function Calculator() {
                 id: "sendNotification",
                 name: "sendNotification",
                 value: "true",
-                onChange: (e) => setFermentNotification(e.currentTarget.checked),
+                onChange: (e) => {
+                  const isChecked = e.currentTarget.checked;
+                  setFermentNotification(isChecked);
+                  // Request notification permission when checkbox is enabled
+                  if (isChecked && 'Notification' in window) {
+                    if (Notification.permission === 'default') {
+                      Notification.requestPermission();
+                    }
+                  }
+                },
                 checked: sendNotification
               }
             ]}

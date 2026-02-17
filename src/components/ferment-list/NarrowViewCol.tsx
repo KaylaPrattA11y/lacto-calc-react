@@ -1,4 +1,5 @@
 import React from "react";
+import { HiBellAlert } from "react-icons/hi2";
 import Details from "../Details";
 import { type FermentEntry } from "../../types";
 import { formatter, getFormattedVal } from "../../utils/formatter";
@@ -14,7 +15,8 @@ export default function NarrowViewCol(originalRowProps : FermentEntry) {
     notes, 
     tags,
     weight, 
-    saltRequired, 
+    saltRequired,
+    sendNotification,
     unit 
   } = originalRowProps;
   const start = dateStart ? new Date(dateStart) : undefined;
@@ -23,11 +25,18 @@ export default function NarrowViewCol(originalRowProps : FermentEntry) {
 
   return (
     <div className="ferment-list--narrow-cell">
-      {status && (
-      <div className={`badge is-${status.toLowerCase()}`}>
-        {status}
+      <div className="ferment-list--badges">
+        {status && (
+        <div className={`badge is-${status.toLowerCase()}`}>
+          {status}
+        </div>
+        )}
+        {sendNotification && status !== "Complete" && (
+        <div className="badge is-info">
+          <HiBellAlert /> Notifications On
+        </div>
+        )}
       </div>
-      )}
       {fermentName && (
       <div>
         <strong>{fermentName}</strong>

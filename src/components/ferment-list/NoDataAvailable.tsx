@@ -48,6 +48,8 @@ export default function NoDataAvailable({setData}: {setData: SetFermentData}) {
     "saltRequired": 321,
     "fermentName": "Pickled Radishes",
     "notes": "Tangy and delicious!",
+    "tags": ["vegetables", "quick"],
+    "status": "Planned",
     "dateStart": "2024-01-01",
     "dateEnd": "2024-01-10",
     "sendNotification": true
@@ -77,6 +79,9 @@ export default function NoDataAvailable({setData}: {setData: SetFermentData}) {
   saltRequired: number;
   fermentName?: string;
   notes?: string;
+  tags?: string[];
+  status?: 'Planned' | 'Active' | 'Complete' | undefined;
+  sendNotification?: boolean;
   dateStart?: string;
   dateEnd?: string;
 }`}
