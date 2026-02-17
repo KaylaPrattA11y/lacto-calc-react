@@ -50,3 +50,7 @@ export interface ColumnsDataProps {
 }
 
 export type SortingState = ColumnSort[]
+
+export type FermentDateRangePreset = 'one-week' | 'two-weeks' | 'one-month' | 'custom' | undefined;
+
+export type PresetUnit = 'grams' | 'ounces' | 'other';

@@ -6,14 +6,12 @@ import CheckboxFieldset from "../CheckboxFieldset";
 import DateRangePicker from "./DateRangePicker";
 import { type DateValue } from '@internationalized/date';
 import { type RangeValue } from 'react-aria';
-import { type FermentEntry } from "../../types";
+import type { FermentDateRangePreset, FermentEntry, PresetUnit } from "../../types";
 import Details from "../Details";
-import { getDuration, getFermentStatus } from "../../utils/time";
+import { getDuration, getFermentDateRangePreset, getFermentStatus } from "../../utils/time";
 import { toast } from "react-toastify";
 import Tagger from "../Tagger";
 import requestNotificationPermission from "../../utils/requestNotificationPermission";
-
-type PresetUnit = 'grams' | 'ounces' | 'other';
 
 export default function Calculator() {
   const masonJarSrc = new URL("../../assets/mason-jar.png", import.meta.url).href;
@@ -28,6 +26,7 @@ export default function Calculator() {
   const [fermentDateRange, setFermentDateRange] = useState<RangeValue<DateValue>|null>(null);
   const [sendNotification, setFermentNotification] = useState<boolean>(false);
   const [showNotificationCheckbox, setShowNotificationCheckbox] = useState<boolean>(true);
+  const [showDateRangePicker, setShowDateRangePicker] = useState<boolean>(false);
   const [fermentTags, setFermentTags] = useState<Set<string>>(new Set());
   const [taggerKey, setTaggerKey] = useState<number>(0);
   // Removed localData state; only use localStorage for persistence
@@ -120,6 +119,7 @@ export default function Calculator() {
     setFermentDateRange(null);
     setFermentNotification(false);
     setFermentTags(new Set());
+    setShowDateRangePicker(false);
     setTaggerKey(prev => prev + 1);
   }
 
@@ -179,27 +179,24 @@ export default function Calculator() {
               <RadioFieldset 
                 legend="Unit" 
                 name="presetUnit"
+                onChangeRadios={e => {
+                  handleChangePresetUnit(e.target.value as PresetUnit);
+                }}
                 radios={[
                   {
                     label: "Grams",
                     id:"grams",
                     value:"grams",
-                    checked:presetUnit === 'grams',
-                    onChange:() => handleChangePresetUnit('grams')
                   },
                   {
                     label: "Ounces",
                     id: "ounces",
                     value: "ounces",
-                    checked:presetUnit === 'ounces',
-                    onChange:() => handleChangePresetUnit('ounces')
                   },
                   {
                     label: "Other",
                     id: "other",
                     value: "other",
-                    checked:presetUnit === 'other',
-                    onChange:() => handleChangePresetUnit('other')
                   }
                 ]}
               >
@@ -233,8 +230,52 @@ export default function Calculator() {
           />
         </div>
         <div className="grid-fDate">
-          <DateRangePicker onChange={value => setFermentDateRange(value)}/>
-          {fermentDateRange && dateStart && dateEnd && (
+          <div>
+            <RadioFieldset
+              legend="Ferment duration (optional)"
+              name="fermentDuration"
+              orientation="horizontal"
+              onChangeRadios={e => {
+                if (e.target.value === 'custom') {
+                  setFermentDateRange(null);
+                  setShowDateRangePicker(true);
+                  return;
+                } else {
+                  const { start, end } = getFermentDateRangePreset(e.target.value as FermentDateRangePreset);
+                  if (start && end) {
+                    setFermentDateRange({ start, end });
+                    setShowDateRangePicker(false);
+                  }
+                }
+              }}
+              radios={[
+                {
+                  label: "1 week",
+                  id: "one-week",
+                  value: "one-week"
+                },
+                {
+                  label: "2 weeks",
+                  id: "two-weeks",
+                  value: "two-weeks"
+                },
+                {
+                  label: "1 month",
+                  id: "one-month",
+                  value: "one-month"
+                },
+                {
+                  label: "Custom",
+                  id: "custom",
+                  value: "custom"
+                }
+              ]}
+            ></RadioFieldset>
+          </div>
+          {showDateRangePicker && (
+            <DateRangePicker onChange={value => setFermentDateRange(value)}/>
+          )}
+          {showDateRangePicker && fermentDateRange && dateStart && dateEnd && (
             <div>Duration: {getDuration(dateStart, dateEnd)}</div>
           )}
           {showNotificationCheckbox && fermentDateRange && getFermentStatus(dateStart, dateEnd) !== "Complete" && (

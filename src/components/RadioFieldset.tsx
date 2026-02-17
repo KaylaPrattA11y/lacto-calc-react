@@ -11,9 +11,11 @@ interface FieldsetProps extends React.FieldsetHTMLAttributes<HTMLFieldSetElement
   name?: string;
   showLegend?: boolean;
   children?: React.ReactNode;
+  onChangeRadios?: React.ChangeEventHandler<HTMLInputElement>;
+  orientation?: 'vertical' | 'horizontal';
 }
 
-export default function RadioFieldset({ legend, name, showLegend = true, children, radios, ...rest }: FieldsetProps) {
+export default function RadioFieldset({ legend, name, showLegend = true, children, radios, onChangeRadios, orientation = 'vertical', ...rest }: FieldsetProps) {
   useEffect(() => {
     
   }, [rest.disabled]);
@@ -21,13 +23,14 @@ export default function RadioFieldset({ legend, name, showLegend = true, childre
   return (
     <fieldset {...rest}>
       <legend className={showLegend ? undefined : "visually-hidden"}>{legend}</legend>
-      <div className="radio-group">
+      <div className={`radio-group is-${orientation}`} role="group" aria-orientation={orientation}>
         {radios.map((radioProps, index) => (
           <div key={index}>
             <input 
               type="radio"
               name={name}
               {...radioProps}
+              onChange={onChangeRadios}
             />
             <label htmlFor={radioProps.id}>{radioProps.label}</label>
           </div>

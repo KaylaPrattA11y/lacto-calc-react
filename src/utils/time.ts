@@ -1,5 +1,6 @@
 import { Temporal } from "@js-temporal/polyfill";
-import type { FermentStatus } from "../types";
+import type { FermentStatus, FermentDateRangePreset } from "../types";
+import type { DateValue } from "react-aria-components";
 
 function getDurationStr(duration: Temporal.Duration) {
   // If duration is negative or zero, return undefined
@@ -80,4 +81,29 @@ export function getFermentStatus(dateStart: string | undefined, dateEnd: string 
   
   if (totalDays <= 0) return 'Complete';
   return 'Active';
+}
+
+export function getFermentDateRangePreset(preset: FermentDateRangePreset) {
+  if (preset === 'custom' || !preset) return { start: undefined, end: undefined };
+  
+  const today = new Date().toISOString().split('T')[0]; // format to YYYY-MM-DD
+  const start = Temporal.PlainDate.from(today);
+  let end = Temporal.PlainDate.from(today);
+
+  if (preset === 'one-week') {
+    end = end.add({ days: 6 });
+  } else if (preset === 'two-weeks') {
+    end = end.add({ days: 13 });
+  } else if (preset === 'one-month') {
+    end = end.add({ months: 1 }).subtract({ days: 1 });
+  }
+  // Convert Temporal.PlainDate to CalendarDate format that react-aria expects
+  const { year: startYear, month: startMonth, day: startDay } = start;
+  const { year: endYear, month: endMonth, day: endDay } = end;
+  
+  // Import CalendarDate from @internationalized/date for proper typing
+  const startDate = { year: startYear, month: startMonth, day: startDay };
+  const endDate = { year: endYear, month: endMonth, day: endDay };
+
+  return { start: startDate as unknown as DateValue, end: endDate as unknown as DateValue };
 }
