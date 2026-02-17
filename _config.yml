@@ -1,0 +1,17 @@
+title: Lacto-Ferment Tools (LFT)
+description: This site is built with Astro and should not be processed by Jekyll.
+
+# Tell GitHub Pages / Jekyll to ignore the Astro source tree and build tooling
+exclude:
+  - src
+  - node_modules
+  - dist
+  - public
+  - package.json
+  - package-lock.json
+  - pnpm-lock.yaml
+  - yarn.lock
+  - tsconfig.json
+  - astro.config.mjs
+  - vite.config.*
+  - README.md
