@@ -69,7 +69,7 @@ export default function Page({ pageTitle, children }: { pageTitle: string; child
           orientation={isSmallScreen ? "horizontal" : "vertical"}
         />
         {children}
-        <ToastContainer theme="dark" />
+        <ToastContainer theme="dark" position="bottom-right" autoClose={8000} />
       </main>
       <footer className="site-footer">
         <small>This little tool was created by Kayla Pratt. <a href="https://github.com/KaylaPrattA11y/lacto-calc-react" target="_blank" rel="noopener noreferrer">View on Github</a></small>

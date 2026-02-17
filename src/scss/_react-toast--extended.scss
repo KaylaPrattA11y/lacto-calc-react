@@ -1,6 +1,9 @@
 :root {
   --toastify-toast-width: max-content;
   --toastify-font-family: "Montserrat Alternates", sans-serif;
+  --toastify-color-dark: var(--dark-teal);
+  --toastify-color-progress-success: var(--tealy-green);
+  --toastify-icon-color-success: var(--tealy-green);
 }
 @layer components {
   .toast-cta {

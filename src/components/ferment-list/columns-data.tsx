@@ -1,5 +1,5 @@
 import React from "react";
-import { HiPencil, HiTrash } from "react-icons/hi";
+import { HiPencil, HiTrash, HiBadgeCheck, HiExclamation } from "react-icons/hi";
 import { getDuration, getRemainingDuration } from "../../utils/time";
 import { getFormattedVal } from '../../utils/formatter';
 import { formatter } from "../../utils/formatter";
@@ -154,6 +154,7 @@ export default function getColumnsData({columnHelper, data, setData}: ColumnsDat
               
               toast.warning(DeleteEntryToast, {
                 autoClose: false,
+                icon: <HiExclamation size="24px" />,
                 onOpen() {
                   // Keep the row highlighted while the toast is open
                   if (rowElement) {
@@ -172,9 +173,13 @@ export default function getColumnsData({columnHelper, data, setData}: ColumnsDat
                       setData(newData);
                       localStorage.setItem('fermentData', JSON.stringify(newData));
                       if (fermentName) {
-                        toast.success(`Deleted ferment: ${fermentName}`);
+                        toast.success(`Deleted ferment: ${fermentName}`, {
+                          icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />
+                        });
                       } else {
-                        toast.success(`Deleted ferment entry.`);
+                        toast.success(`Deleted ferment entry.`, {
+                          icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />
+                        });
                       }
                       break;
                     case "cancel":

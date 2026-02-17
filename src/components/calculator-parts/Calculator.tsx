@@ -1,5 +1,5 @@
 import React, { useRef, useState, useMemo, useEffect } from "react";
-import { HiPlus } from "react-icons/hi";
+import { HiPlus, HiBadgeCheck } from "react-icons/hi";
 import Input from '../Input';
 import RadioFieldset from "../RadioFieldset";
 import CheckboxFieldset from "../CheckboxFieldset";
@@ -89,7 +89,9 @@ export default function Calculator() {
       localStorage.setItem('fermentData', JSON.stringify(newData));
       window.dispatchEvent(new Event('fermentDataUpdated'));
     }
-    toast.success('Ferment added successfully!');
+    toast.success('Ferment added successfully!', {
+      icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />
+    });
   }
 
   function handleReset() {

@@ -1,4 +1,6 @@
+import React from 'react';
 import { toast } from 'react-toastify';
+import { HiBadgeCheck } from 'react-icons/hi';
 import { type FermentEntry, type SetFermentData } from '../types';
 
 export default function importFermentEntries(setData: SetFermentData) {
@@ -17,7 +19,9 @@ export default function importFermentEntries(setData: SetFermentData) {
         localStorage.setItem('fermentData', JSON.stringify(importedData));
         // Dispatch custom event to notify FermentList of new data
         window.dispatchEvent(new Event('fermentDataUpdated'));
-        toast.success('Ferment data imported successfully.');
+        toast.success('Ferment data imported successfully.', {
+          icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />
+        });
       } catch (error) {
         toast.error('Failed to import ferment data. Please ensure the file is a valid JSON.');
         throw new Error('Invalid JSON file', error as Error);

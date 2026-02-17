@@ -2,7 +2,9 @@ import React from "react";
 import { 
   HiOutlineDownload, 
   HiOutlineUpload,
-  HiTrash
+  HiTrash,
+  HiBadgeCheck,
+  HiExclamation
 } from "react-icons/hi";
 import type { FermentEntry, SetFermentData } from "../../types";
 import IconButton from "../IconButton";
@@ -43,7 +45,9 @@ export default function FermentListHeader({data, setData}: {data: FermentEntry[]
     localStorage.removeItem('fermentData');
     // Dispatch custom event to notify FermentList of data deletion
     window.dispatchEvent(new Event('fermentDataUpdated'));
-    toast.success('All ferments deleted successfully.');
+    toast.success('All ferments deleted successfully.', {
+      icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />
+    });
   }
   function exportFermentEntries() {
     // save JSON file to user's device
@@ -54,7 +58,9 @@ export default function FermentListHeader({data, setData}: {data: FermentEntry[]
     a.download = `LFT_EXPORT_${new Date().toISOString()}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success('Ferment data exported successfully.');
+    toast.success('Ferment data exported successfully.', {
+      icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />
+    });
   }
 
   return (
@@ -75,6 +81,7 @@ export default function FermentListHeader({data, setData}: {data: FermentEntry[]
           onClick={() => {
             toast.warning(ImportEntriesToast, {
               autoClose: false,
+              icon: <HiExclamation size="24px" />,
               onClose(reason) {
                 switch (reason) {
                   case "import":
@@ -99,6 +106,7 @@ export default function FermentListHeader({data, setData}: {data: FermentEntry[]
 
             toast.warning(DeleteEntriesToast, {
               autoClose: false,
+              icon: <HiExclamation size="24px" />,
               onClose(reason) {
                 switch (reason) {
                   case "export-delete-all":
