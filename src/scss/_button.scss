@@ -18,6 +18,11 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+  button:has(> svg) {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
 }
 @layer components {
   button.is-sm {

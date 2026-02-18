@@ -5,8 +5,10 @@
     margin-block-start: 0.5rem;
     > div {
       display: flex;
-      align-items: center;
       gap: 0.5rem;
+      input {
+        flex-shrink: 0;
+      }
     }
     &.is-horizontal {
       grid-auto-flow: column;

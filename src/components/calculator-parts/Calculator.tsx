@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, useEffect } from "react";
+import React, { useRef, useState, useMemo, useEffect, useContext } from "react";
 import { HiPlus, HiBadgeCheck, HiExclamationCircle } from "react-icons/hi";
 import Input from '../Input';
 import RadioFieldset from "../RadioFieldset";
@@ -12,13 +12,15 @@ import { getDuration, getFermentDateRangePreset, getFermentStatus } from "../../
 import { toast } from "react-toastify";
 import Tagger from "../Tagger";
 import requestNotificationPermission from "../../utils/requestNotificationPermission";
+import { NotificationsContext } from "../SpecialFeaturesContext";
 
 export default function Calculator() {
+  const canReceiveNotifications = useContext(NotificationsContext);
   const formRef = useRef<HTMLFormElement|null>(null);
   const [weight, setWeight] = useState<number|null>(null);
   const [presetUnit, setPresetUnit] = useState<PresetUnit>('grams');
   const [customUnit, setCustomUnit] = useState<string>('');
-  const [brinePercentage, setBrinePercentage] = useState<number|null>(null);
+  const [brinePercentage, setBrinePercentage] = useState<number|null>(2.2);
   const [saltRequired, setSaltRequired] = useState<number|null>(null);
   const [fermentName, setFermentName] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
@@ -26,6 +28,7 @@ export default function Calculator() {
   const [sendNotification, setFermentNotification] = useState<boolean>(false);
   const [showNotificationCheckbox, setShowNotificationCheckbox] = useState<boolean>(true);
   const [showDateRangePicker, setShowDateRangePicker] = useState<boolean>(false);
+  const [showCustomBrinePercentageInput, setShowCustomBrinePercentageInput] = useState<boolean>(false);
   const [fermentTags, setFermentTags] = useState<Set<string>>(new Set());
   const [taggerKey, setTaggerKey] = useState<number>(0);
   const [submitIsDisabled, setSubmitIsDisabled] = useState<boolean>(false);
@@ -46,6 +49,68 @@ export default function Calculator() {
       dateEnd: fermentDateRange?.end ? dateToStr(fermentDateRange.end) : undefined
     }
   }, [fermentDateRange]);
+
+  const brinePercentagePresets = [
+    {
+      label: "2.2%",
+      subLabel: "Green beans, cabbage, carrots, beets, cauliflower, potatoes, tomatoes",
+      id: "brine-2",
+      value: "2.2",
+      defaultChecked: true
+    },
+    {
+      label: "3%",
+      subLabel: "Cucumbers, garlic, okra",
+      id: "brine-3",
+      value: "3"
+    },
+    {
+      label: "4%",
+      subLabel: "Peppers (spicy/sweet)",
+      id: "brine-4",
+      value: "4"
+    },
+    {
+      label: "5%",
+      subLabel: "Onions, radishes",
+      id: "brine-5",
+      value: "5"
+    },
+    {
+      label: "10%",
+      subLabel: "Olives",
+      id: "brine-10",
+      value: "10"
+    },
+    {
+      label: "Custom",
+      id: "brine-custom",
+      value: "custom"
+    }
+  ];
+
+  const dateRangePresets = [
+    {
+      label: "1 week",
+      id: "one-week",
+      value: "one-week"
+    },
+    {
+      label: "2 weeks",
+      id: "two-weeks",
+      value: "two-weeks"
+    },
+    {
+      label: "1 month",
+      id: "one-month",
+      value: "one-month"
+    },
+    {
+      label: "Custom",
+      id: "custom",
+      value: "custom"
+    }
+  ];
 
   useEffect(() => {
     const salt = (Number(weight || 0) * Number(brinePercentage || 0)) / 100;
@@ -120,7 +185,9 @@ export default function Calculator() {
 
   function handleReset() {
     setWeight(null);
-    setBrinePercentage(null);
+    setBrinePercentage(2.2);
+    setPresetUnit('grams');
+    setCustomUnit('');
     setSaltRequired(null);
     setFermentName('');
     setNotes('');
@@ -135,8 +202,35 @@ export default function Calculator() {
     <form ref={formRef} onSubmit={e => handleSubmit(e)} onReset={handleReset} className="calculator">
       <div className="calculator-grid">
         <div className="grid-brine">
+          <RadioFieldset
+            className="brine-presets"
+            legend="Salt Brine"
+            // orientation="horizontal"
+            name="brinePercentage"
+            onChangeRadios={e => {
+              const val = e.target.value;
+
+              setShowCustomBrinePercentageInput(val === 'custom');
+              if (val === 'custom') {
+                setBrinePercentage(null);
+                return;
+              }
+              const numVal = parseFloat(val);
+              setBrinePercentage(numVal);
+            }}
+            radios={brinePercentagePresets.map(p => ({
+              label: p.label,
+              id: p.id,
+              value: String(p.value),
+              subLabel: p.subLabel,
+              defaultChecked: p.defaultChecked
+            }))}
+          />
+          {showCustomBrinePercentageInput && (
+          <>
           <Input 
             label="Salt brine" 
+            showLabel={false}
             id="brine-percentage" 
             addon="%" 
             name="brinePercentage" 
@@ -150,18 +244,11 @@ export default function Calculator() {
             }}
             min={2} 
             max={10} 
-            list="suggestions" 
             required
             helpText={<p>The percentage of salt relative to the total weight. For example, if you want to use a 2% salt brine, enter 2. Common salt percentages for fermentation range from 2% to 10%, with 2-3% being common for vegetables and up to 5-6% for fish or meat.</p>}
           />
-          <datalist id="suggestions">
-            <option value="2" label="Green beans, cauliflower, potatoes, tomatoes" />
-            <option value="2.2" label="Beets, broccoli, cabbage, carrots" />
-            <option value="3" label="Cucumbers, garlic, okra" />
-            <option value="4" label="Peppers (spicy/sweet)" />
-            <option value="5" label="Onions, radishes" />
-            <option value="10" label="Olives" />
-          </datalist>
+          </>
+        )}
         </div>
         <fieldset className="grid-salt">
           <legend className="visually-hidden">Calculate salt using:</legend>
@@ -185,6 +272,7 @@ export default function Calculator() {
             </div>
             <div>
               <RadioFieldset 
+                className="unit-presets"
                 legend="Unit" 
                 name="presetUnit"
                 onChangeRadios={e => {
@@ -257,28 +345,11 @@ export default function Calculator() {
                   }
                 }
               }}
-              radios={[
-                {
-                  label: "1 week",
-                  id: "one-week",
-                  value: "one-week"
-                },
-                {
-                  label: "2 weeks",
-                  id: "two-weeks",
-                  value: "two-weeks"
-                },
-                {
-                  label: "1 month",
-                  id: "one-month",
-                  value: "one-month"
-                },
-                {
-                  label: "Custom",
-                  id: "custom",
-                  value: "custom"
-                }
-              ]}
+              radios={dateRangePresets.map(p => ({
+                label: p.label,
+                id: p.id,
+                value: p.value
+              }))}
             ></RadioFieldset>
           </div>
           {showDateRangePicker && (
@@ -287,7 +358,7 @@ export default function Calculator() {
           {showDateRangePicker && fermentDateRange && dateStart && dateEnd && (
             <div>Duration: {getDuration(dateStart, dateEnd)}</div>
           )}
-          {showNotificationCheckbox && fermentDateRange && getFermentStatus(dateStart, dateEnd) !== "Complete" && (
+          {canReceiveNotifications !== false && showNotificationCheckbox && fermentDateRange && getFermentStatus(dateStart, dateEnd) !== "Complete" && (
           <CheckboxFieldset 
             legend="Fermentation completion reminder" 
             showLegend={false}
@@ -324,26 +395,28 @@ export default function Calculator() {
         </div>
         <div className="grid-fNotes">
           <div>
-            <label htmlFor="ferment-notes">Ferment notes (optional)</label>
-            <textarea 
-              name="notes" 
-              id="ferment-notes"
-              value={notes}
-              maxLength={500}
-              onChange={e => {
-                const v = e.currentTarget.value;
-                setNotes(v);
-              }}
-              rows={4}></textarea>
-          </div>
-          <div>
-            <Tagger
-             key={taggerKey}
-             label="Tags (optional)" 
-             id="tags" 
-             name="tags"
-             onChangeTags={setFermentTags}
-            />
+            <div>
+              <label htmlFor="ferment-notes">Ferment notes (optional)</label>
+              <textarea 
+                name="notes" 
+                id="ferment-notes"
+                value={notes}
+                maxLength={500}
+                onChange={e => {
+                  const v = e.currentTarget.value;
+                  setNotes(v);
+                }}
+                rows={4}></textarea>
+            </div>
+            <div>
+              <Tagger
+              key={taggerKey}
+              label="Tags (optional)" 
+              id="tags" 
+              name="tags"
+              onChangeTags={setFermentTags}
+              />
+            </div>
           </div>
         </div>
         <div className="grid-output">

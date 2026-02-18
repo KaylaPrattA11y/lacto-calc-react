@@ -1,4 +1,9 @@
-export default async function requestNotificationPermission({onPermissionGranted, onPermissionDenied}: {onPermissionGranted?: () => void, onPermissionDenied?: () => void}) {
+interface RequestNotificationPermissionOptions {
+  onPermissionGranted?: () => void;
+  onPermissionDenied?: () => void;
+}
+
+export default async function requestNotificationPermission({ onPermissionGranted, onPermissionDenied }: RequestNotificationPermissionOptions = {}) {
   try {
     const permission = await Notification.requestPermission();
     

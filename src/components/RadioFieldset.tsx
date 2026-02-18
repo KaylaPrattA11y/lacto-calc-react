@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   id: string;
+  subLabel?: string;
 }
 
 interface FieldsetProps extends React.FieldsetHTMLAttributes<HTMLFieldSetElement> {
@@ -17,7 +18,6 @@ interface FieldsetProps extends React.FieldsetHTMLAttributes<HTMLFieldSetElement
 
 export default function RadioFieldset({ legend, name, showLegend = true, children, radios, onChangeRadios, orientation = 'vertical', ...rest }: FieldsetProps) {
   useEffect(() => {
-    
   }, [rest.disabled]);
 
   return (
@@ -32,7 +32,9 @@ export default function RadioFieldset({ legend, name, showLegend = true, childre
               {...radioProps}
               onChange={onChangeRadios}
             />
-            <label htmlFor={radioProps.id}>{radioProps.label}</label>
+            <label htmlFor={radioProps.id}>
+              {radioProps.label} {radioProps.subLabel && <small className="sub-label">- {radioProps.subLabel}</small>}
+            </label>
           </div>
         ))}
       </div>

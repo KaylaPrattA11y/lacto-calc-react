@@ -34,6 +34,7 @@
   }
   .grid {
     &-brine {
+      container: brine-fieldset / inline-size;
       grid-area: brine;
     }
     &-salt {
@@ -64,9 +65,40 @@
       }
     }
     &-fNotes {
+      container: fNotes-fieldset / inline-size;
       grid-area: fNotes;
-      display: grid;
-      gap: 1rem;
+      > div {
+        display: grid;
+        gap: 1rem;
+        @container fNotes-fieldset (width >= 600px) {
+          gap: 1rem 2rem;
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    }
+  }
+  .brine-presets .radio-group {
+    margin-block-end: 0.5rem;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-areas: 
+      "preset1" 
+      "preset2" 
+      "preset3" 
+      "preset4" 
+      "preset5" 
+      "preset6";
+    @container brine-fieldset (width >= 400px) {
+      grid-template-areas: 
+        "preset1 preset2" 
+        "preset3 preset4" 
+        "preset5 preset5"
+        "preset6 preset6";
+    }
+    @each $i in 1, 2, 3, 4, 5, 6 {
+      > div:nth-child(#{$i}) {
+        grid-area: preset#{$i};
+      }
     }
   }
   .calculator-output {
@@ -91,6 +123,7 @@
       content: "";
       background-image: url("../assets/mason-jar.png");
       background-size: cover;
+      background-position: top center;
       position: absolute;
       inline-size: 95%;
       block-size: 100%;
@@ -108,16 +141,9 @@
   .calculator-submit {
     display: grid;
     gap: 0.5rem;
-    // position: sticky;
-    // bottom: 0;
-    // padding-block: 1rem;
-    // justify-content: flex-end;
-    // background-color: var(--background-color);
-    // @container calculator (width < 500px) {
-      button {
-        inline-size: 100%;
-      }
-    // }
+    button {
+      inline-size: 100%;
+    }
   }
   .salt-calc-grid {
     display: grid;

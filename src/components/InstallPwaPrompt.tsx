@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { HiDeviceMobile, HiBell } from 'react-icons/hi';
 import requestNotificationPermission from '../utils/requestNotificationPermission';
+import { PwaContext, NotificationsContext } from './SpecialFeaturesContext';
 
 declare global {
   interface Window {
@@ -14,71 +15,52 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export default function InstallPwaPrompt() {
-  const [showButton, setShowButton] = useState<boolean>(false);
-  const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
-  const [showNotificationButton, setShowNotificationButton] = useState<boolean>(false);
+  const canInstallPwa = useContext(PwaContext);
+  const canReceiveNotifications = useContext(NotificationsContext);
+
 
   const handleInstallClick = useCallback(async () => {
-    if (!installPromptEvent) {
-      if (import.meta.env.DEV) {
-        console.log('No installPromptEvent – beforeinstallprompt never fired');
-      }
+    if (!window.installPrompt) {
       return;
     }
-    await installPromptEvent.prompt();
-    const result = await installPromptEvent.userChoice;
-    if (import.meta.env.DEV) {
-      console.log('Install outcome:', result.outcome);
+    
+    try {
+      await window.installPrompt.prompt();
+      const result = await window.installPrompt.userChoice;
+
+      if (result.outcome === 'accepted') {
+        window.installPrompt = undefined;
+      }
+    } catch (error) {
+      console.error('[InstallPwaPrompt] Error prompting install:', error);
     }
-    setInstallPromptEvent(null);
-    setShowButton(false);
-  }, [installPromptEvent]);
+  }, []);
 
   const handleNotificationPermission = useCallback(async () => {
     if (!('Notification' in window)) {
-      if (import.meta.env.DEV) {
-        console.log('Browser does not support notifications');
-      }
       return;
     }
-    await requestNotificationPermission({
-      onPermissionGranted: () => {
-        setShowNotificationButton(false);
-      },
-      onPermissionDenied: () => {
-        setShowNotificationButton(false);
-      }
-    });
+    await requestNotificationPermission();
   }, []);
 
-  useEffect(() => {
-    const installPromptHandler = (event: Event) => {
-      event.preventDefault();
-      setInstallPromptEvent(event as BeforeInstallPromptEvent);
-      setShowButton(true);
-    }
-    window.addEventListener("beforeinstallprompt", installPromptHandler);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', installPromptHandler);
-    };
-  }, []);
-
-  useEffect(() => {
-    // Check if notifications are supported and permission hasn't been requested yet
-    if ('Notification' in window && Notification.permission === 'default') {
-      setShowNotificationButton(true);
-    }
-  }, []);
+  // Show install button if PWA is available to install
+  const showInstallButton = canInstallPwa === true;
+  
+  // Show notification button if permission hasn't been granted or denied yet
+  const showNotificationButton = canReceiveNotifications === null;
 
   return (
     <div className="install-pwa-prompt">
-    {showButton && (
-      <button type="button" className="is-primary is-sm" onClick={handleInstallClick}>Install App <HiDeviceMobile /></button>
-    )}
-    {showNotificationButton && (
-      <button type="button" className="is-secondary is-sm" onClick={handleNotificationPermission}>Enable Notifications <HiBell /></button>
-    )}
+      {showInstallButton && (
+        <button type="button" className="is-primary is-sm" onClick={handleInstallClick}>
+          Install App <HiDeviceMobile />
+        </button>
+      )}
+      {showNotificationButton && (
+        <button type="button" className="is-secondary is-sm" onClick={handleNotificationPermission}>
+          Enable Notifications <HiBell />
+        </button>
+      )}
     </div>
   );
 }

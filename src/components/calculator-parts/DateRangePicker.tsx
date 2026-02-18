@@ -9,7 +9,7 @@ export default function DateRangePicker({ onChange }: {onChange: (value: RangeVa
   return (
     <>
       <AriaDateRangePicker onChange={value => onChange(value)}>
-        <Label>Ferment duration (optional)</Label>
+        <Label className="visually-hidden">Ferment duration (optional)</Label>
         <Group>
           <DateInput slot="start">
             {(segment) => <DateSegment segment={segment} />}

@@ -1,26 +1,13 @@
 import React from "react";
-import { HiPencil, HiTrash, HiBadgeCheck, HiExclamation, HiShare } from "react-icons/hi";
+import { HiPencil, HiTrash, HiShare } from "react-icons/hi";
 import { getDuration, getRemainingDuration } from "../../utils/time";
 import { getFormattedVal } from '../../utils/formatter';
 import { formatter } from "../../utils/formatter";
 import IconButton from '../IconButton';
 import NarrowViewCol from './NarrowViewCol';
-import { toast, type ToastContentProps } from "react-toastify";
 import type { ColumnsDataProps } from "../../types";
-
-function DeleteEntryToast({ closeToast }: ToastContentProps) {
-  return ( 
-    <div className="toast-cta">
-      <div className="toast-cta--message">
-        Are you sure you want to delete this ferment?
-      </div>
-      <div className="toast-cta--actions">
-        <button onClick={() => closeToast("delete")} className="is-primary is-sm">Delete</button>
-        <button onClick={() => closeToast("cancel")} className="is-secondary is-sm">Cancel</button>
-      </div>
-    </div>
-  )
-}
+import handleShareFerment from "../../utils/handleShareFerment";
+import handleDeleteFerment from "../../utils/handleDeleteFerment";
 
 function getColumnsData({columnHelper, data, setData}: ColumnsDataProps) {
   return [
@@ -156,24 +143,12 @@ function getColumnsData({columnHelper, data, setData}: ColumnsDataProps) {
           {import.meta.env.DEV && (
             <IconButton size="sm" variant="secondary" label="Edit"><HiPencil size={14} /></IconButton>
           )}
-          {navigator.share && (
+          {navigator.share !== undefined && (
             <IconButton 
               size="sm" 
               variant="secondary" 
               label="Share"
-              onClick={() => {
-                try {
-                  const fermentData = props.row.original;
-                  const title = fermentData.fermentName || 'Ferment entry';
-                  const text = `Check out my ferment: ${fermentData.fermentName ? `"${fermentData.fermentName}"` : null} It has been fermenting since ${formatter.date.format(new Date(fermentData.dateStart || ''))} and requires ${getFormattedVal(fermentData.saltRequired, fermentData.unit)} of salt at a brine percentage of ${formatter.percent.format(fermentData.brinePercentage / 100)}. ${fermentData.tags && fermentData.tags.length > 0 ? `Tags: ${fermentData.tags.join(', ')}` : ''}`;
-                  const shareData = { title, text };
-
-                  navigator.share(shareData)
-                } catch(error) {
-                  console.error('Error sharing:', error);
-                  toast.error('Failed to share the ferment entry. Uh... sorry.');
-                }
-              }}
+              onClick={() => handleShareFerment(props.row.original)}
             >
               <HiShare size={14} />
             </IconButton>
@@ -182,53 +157,7 @@ function getColumnsData({columnHelper, data, setData}: ColumnsDataProps) {
             size="sm" 
             variant="secondary" 
             label="Delete"
-            onClick={() => {
-              const { fermentName } = props.row.original;
-              const rowElement = document.querySelector(
-                `[data-row-id="${props.row.id}"]`
-              );
-              
-              toast.warning(DeleteEntryToast, {
-                autoClose: false,
-                icon: <HiExclamation size="24px" />,
-                position: "top-right",
-                onOpen() {
-                  // Keep the row highlighted while the toast is open
-                  if (rowElement) {
-                    rowElement.classList.add('highlight-row');
-                  }
-                },
-                onClose(reason) {
-                  const newData = data.filter(d => d.id !== props.row.original.id);
-
-                  if (rowElement) {
-                    rowElement.classList.remove('highlight-row');
-                  }
-
-                  switch (reason) {
-                    case "delete":
-                      setData(newData);
-                      localStorage.setItem('fermentData', JSON.stringify(newData));
-                      if (fermentName) {
-                        toast.success(`Deleted ferment: ${fermentName}`, {
-                          icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
-                          position: "bottom-right",
-                        });
-                      } else {
-                        toast.success(`Deleted ferment entry.`, {
-                          icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
-                          position: "bottom-right",
-                        });
-                      }
-                      break;
-                    case "cancel":
-                      return;
-                    default:
-                      return;
-                  }
-                }
-              });
-            }}
+            onClick={() => handleDeleteFerment(props.row.original, data, setData)}
           >
             <HiTrash size={14} />
           </IconButton>

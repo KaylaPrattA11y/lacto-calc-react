@@ -83,13 +83,12 @@
     padding: 0.5rem 1rem;
     display: grid;
     gap: 0.5rem;
-    grid-template-columns: auto auto;
     justify-content: center;
-    align-items: baseline;
   }
   .install-pwa-prompt {
     display: grid;
     gap: 0.5rem;
+    grid-auto-flow: column;
     justify-content: center;
   }
 }
