@@ -1,5 +1,5 @@
 import React from "react";
-import { HiPencil, HiTrash, HiBadgeCheck, HiExclamation } from "react-icons/hi";
+import { HiPencil, HiTrash, HiBadgeCheck, HiExclamation, HiShare } from "react-icons/hi";
 import { getDuration, getRemainingDuration } from "../../utils/time";
 import { getFormattedVal } from '../../utils/formatter';
 import { formatter } from "../../utils/formatter";
@@ -22,7 +22,7 @@ function DeleteEntryToast({ closeToast }: ToastContentProps) {
   )
 }
 
-export default function getColumnsData({columnHelper, data, setData}: ColumnsDataProps) {
+function getColumnsData({columnHelper, data, setData}: ColumnsDataProps) {
   return [
     columnHelper.display({
       id: 'narrowViewCol',
@@ -34,6 +34,20 @@ export default function getColumnsData({columnHelper, data, setData}: ColumnsDat
       cell: props => <span className={`badge is-${props.row.original.status?.toLowerCase()}`}>{props.row.original.status}</span>,
       enableSorting: true,
       sortingFn: 'alphanumeric',
+      enableColumnFilter: true,
+    }),
+    columnHelper.accessor('dateCreated', {
+      header: 'Created',
+      id: 'dateCreated',
+      cell: props => {
+        const { dateCreated } = props.row.original;
+        if (!dateCreated) return undefined;
+        const created = new Date(dateCreated);
+        return `${formatter.dateTime.format(created)}`;
+      },
+      enableHiding: true,
+      enableSorting: true,
+      sortingFn: 'datetime',
       enableColumnFilter: true,
     }),
     columnHelper.accessor('fermentName', {
@@ -142,6 +156,28 @@ export default function getColumnsData({columnHelper, data, setData}: ColumnsDat
           {import.meta.env.DEV && (
             <IconButton size="sm" variant="secondary" label="Edit"><HiPencil size={14} /></IconButton>
           )}
+          {navigator.share && (
+            <IconButton 
+              size="sm" 
+              variant="secondary" 
+              label="Share"
+              onClick={() => {
+                try {
+                  const fermentData = props.row.original;
+                  const title = fermentData.fermentName || 'Ferment entry';
+                  const text = `Check out my ferment: ${fermentData.fermentName ? `"${fermentData.fermentName}"` : null} It has been fermenting since ${formatter.date.format(new Date(fermentData.dateStart || ''))} and requires ${getFormattedVal(fermentData.saltRequired, fermentData.unit)} of salt at a brine percentage of ${formatter.percent.format(fermentData.brinePercentage / 100)}. ${fermentData.tags && fermentData.tags.length > 0 ? `Tags: ${fermentData.tags.join(', ')}` : ''}`;
+                  const shareData = { title, text };
+
+                  navigator.share(shareData)
+                } catch(error) {
+                  console.error('Error sharing:', error);
+                  toast.error('Failed to share the ferment entry. Uh... sorry.');
+                }
+              }}
+            >
+              <HiShare size={14} />
+            </IconButton>
+          )}
           <IconButton 
             size="sm" 
             variant="secondary" 
@@ -201,3 +237,5 @@ export default function getColumnsData({columnHelper, data, setData}: ColumnsDat
     }),
   ]
 }
+
+export { getColumnsData };

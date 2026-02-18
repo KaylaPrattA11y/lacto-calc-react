@@ -46,6 +46,7 @@ export default function NoDataAvailable({setData}: {setData: SetFermentData}) {
     "unit": "grams",
     "brinePercentage": 2.2,
     "saltRequired": 321,
+    "dateCreated": "2024-01-01T12:00:00.000Z",
     "fermentName": "Pickled Radishes",
     "notes": "Tangy and delicious!",
     "tags": ["vegetables", "quick"],
@@ -77,6 +78,7 @@ export default function NoDataAvailable({setData}: {setData: SetFermentData}) {
   unit: string;
   brinePercentage: number;
   saltRequired: number;
+  dateCreated: Date;
   fermentName?: string;
   notes?: string;
   tags?: string[];

@@ -58,6 +58,10 @@
       display: grid;
       gap: 0.5rem;
       align-content: start;
+      .radio-group.is-horizontal {
+        grid-auto-flow: unset;
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
     &-fNotes {
       grid-area: fNotes;
@@ -83,11 +87,13 @@
       padding: 1rem 2rem 2rem;
       border-radius: var(--border-radius);
     }
-    img {
+    &::before {
+      content: "";
+      background-image: url("../assets/mason-jar.png");
+      background-size: cover;
       position: absolute;
       inline-size: 95%;
-      inset: -1rem auto auto 50%;
-      translate: -50% 0;
+      block-size: 100%;
       opacity: 0.1;
       z-index: -1;
     }

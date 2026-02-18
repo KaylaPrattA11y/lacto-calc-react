@@ -44,6 +44,7 @@ export default function Tagger({ onChangeTags, ...inputProps }: TaggerProps) {
         type="text" 
         className="tagger--input" 
         value={inputValue}
+        maxLength={20}
         onChange={e => {
           setInputValue(e.target.value);
         }}
@@ -60,7 +61,7 @@ export default function Tagger({ onChangeTags, ...inputProps }: TaggerProps) {
         disabled={tagsExceeded}
         {...inputProps} 
         addon={<button aria-label="Add tag" type="button" onClick={handleAddTag} className="tagger--add-button is-primary" disabled={tagsExceeded}><HiPlus /></button>}
-        description={`Add up to ${maxTags} tags using Enter, Comma, or by clicking the + (plus) button to add a tag.`}
+        description={`Add up to ${maxTags} tags using Enter, Comma, or by clicking the + (plus) button.`}
       />
       <input type="hidden" value={[...tags]} />
       <ul className="tagger--list">

@@ -1,6 +1,7 @@
 const formatter = {
   number: new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }),
   date: new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', year: 'numeric' }),
+  dateTime: new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }),
   percent: new Intl.NumberFormat(undefined, { style: 'percent', maximumFractionDigits: 1 }),
   gram: new Intl.NumberFormat(undefined, { style: "unit", unit: "gram", compactDisplay: "short", maximumFractionDigits: 0 }),
   ounce: new Intl.NumberFormat(undefined, { style: "unit", unit: "ounce", compactDisplay: "short", maximumFractionDigits: 0 }),

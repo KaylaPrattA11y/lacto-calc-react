@@ -18,10 +18,10 @@ export default function FermentListFilters({ globalFilter, setGlobalFilter, stat
         value={statusFilter}
         name="status"
       >
-        <option value="">All Ferments</option>
-        <option value="Active">Active Ferments</option>
-        <option value="Complete">Completed Ferments</option>
-        <option value="Planned">Planned Ferments</option>
+        <option value="">All</option>
+        <option value="Active">Active</option>
+        <option value="Complete">Complete</option>
+        <option value="Planned">Planned</option>
       </select>
       <Input 
         id="ferment-search"

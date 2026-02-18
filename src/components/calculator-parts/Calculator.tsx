@@ -14,7 +14,6 @@ import Tagger from "../Tagger";
 import requestNotificationPermission from "../../utils/requestNotificationPermission";
 
 export default function Calculator() {
-  const masonJarSrc = new URL("../../assets/mason-jar.png", import.meta.url).href;
   const formRef = useRef<HTMLFormElement|null>(null);
   const [weight, setWeight] = useState<number|null>(null);
   const [presetUnit, setPresetUnit] = useState<PresetUnit>('grams');
@@ -29,6 +28,7 @@ export default function Calculator() {
   const [showDateRangePicker, setShowDateRangePicker] = useState<boolean>(false);
   const [fermentTags, setFermentTags] = useState<Set<string>>(new Set());
   const [taggerKey, setTaggerKey] = useState<number>(0);
+  const [submitIsDisabled, setSubmitIsDisabled] = useState<boolean>(false);
   // Removed localData state; only use localStorage for persistence
 
   // Derive unit from presetUnit and customUnit
@@ -81,6 +81,7 @@ export default function Calculator() {
         fermentName,
         notes,
         status: getFermentStatus(dateStart, dateEnd),
+        dateCreated: new Date(),
         dateStart,
         dateEnd,
         sendNotification,
@@ -106,7 +107,14 @@ export default function Calculator() {
     }
     toast.success(toastMessage, {
       icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
-      position: "bottom-right"
+      position: "bottom-right",
+      autoClose: 5000,
+      onOpen() {
+        setSubmitIsDisabled(true);
+      },
+      onClose() {        
+        setSubmitIsDisabled(false);
+      }
     });
   }
 
@@ -172,7 +180,7 @@ export default function Calculator() {
                   setWeight(Number.isNaN(v as number) ? null : (v as number));
                 }}
                 required
-                helpText={<p>The <em>combined weight</em> of the food and water being fermented in {unit}. For example, if you are fermenting 500 {unit} of vegetables and 500 {unit} of brine, the total weight would be 1,000 {unit}.</p>}
+                helpText={unit ? <p>The <em>combined weight</em> of the food and water being fermented in {unit}. For example, if you are fermenting 500 {unit} of vegetables and 500 {unit} of brine, the total weight would be 1,000 {unit}.</p> : undefined}
               />
             </div>
             <div>
@@ -187,6 +195,7 @@ export default function Calculator() {
                     label: "Grams",
                     id:"grams",
                     value:"grams",
+                    defaultChecked: true
                   },
                   {
                     label: "Ounces",
@@ -339,7 +348,6 @@ export default function Calculator() {
         </div>
         <div className="grid-output">
           <div className="calculator-output">
-            <img src={masonJarSrc} alt="" aria-hidden="true" />
             {saltRequired != null && saltRequired > 0 ? (
             <div>
               <div>
@@ -351,7 +359,7 @@ export default function Calculator() {
                 </Details>
               </div>
               <div className="calculator-submit">
-                <button type="submit" className="is-primary"><HiPlus size={16} /> Add ferment</button>
+                <button type="submit" className="is-primary" disabled={submitIsDisabled}><HiPlus size={16} /> Add ferment</button>
                 <button type="reset" className="is-tertiary">Reset</button>
               </div>
             </div>

@@ -23,7 +23,7 @@ import {
 } from "../../types";
 import NoDataAvailable from './NoDataAvailable';
 import FermentListHeader from './FermentListHeader';
-import getColumnsData from './columns-data';
+import { getColumnsData } from './columns-data';
 import Spinner from '../Spinner';
 import FermentListFilters from './FermentListFilters';
 import FermentListFooter from './FermentListFooter';
@@ -37,7 +37,9 @@ export default function FermentList() {
   const [globalFilter, setGlobalFilter] = useState<string>('');
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [statusFilter, setStatusFilter] = useState<string>('Active');
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'dateCreated', desc: true }
+  ]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -46,6 +48,7 @@ export default function FermentList() {
   const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({
     narrowViewCol: false,
     status: false,
+    dateCreated: false,
     fermentName: false,
     brinePercentage: false,
     weight: false,
@@ -68,6 +71,7 @@ export default function FermentList() {
       setColumnVisibility({
         narrowViewCol: false,
         status: true,
+        dateCreated: true,
         fermentName: true,
         brinePercentage: true,
         weight: true,
@@ -85,6 +89,7 @@ export default function FermentList() {
       setColumnVisibility({
         narrowViewCol: false,
         status: true,
+        dateCreated: true,
         fermentName: true,
         brinePercentage: false,
         weight: false,
@@ -102,6 +107,7 @@ export default function FermentList() {
       setColumnVisibility({
         narrowViewCol: false,
         status: true,
+        dateCreated: false,
         fermentName: true,
         brinePercentage: false,
         weight: false,
@@ -119,6 +125,7 @@ export default function FermentList() {
       setColumnVisibility({
         narrowViewCol: true,
         status: false,
+        dateCreated: false,
         fermentName: false,
         brinePercentage: false,
         weight: false,
