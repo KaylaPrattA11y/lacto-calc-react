@@ -17,13 +17,22 @@ interface FieldsetProps extends React.FieldsetHTMLAttributes<HTMLFieldSetElement
 }
 
 export default function RadioFieldset({ legend, name, showLegend = true, children, radios, onChangeRadios, orientation = 'vertical', ...rest }: FieldsetProps) {
-  useEffect(() => {
-  }, [rest.disabled]);
+  const id = `legend-${crypto.randomUUID()}`;
 
   return (
     <fieldset {...rest}>
-      <legend className={showLegend ? undefined : "visually-hidden"}>{legend}</legend>
-      <div className={`radio-group is-${orientation}`} role="group" aria-orientation={orientation}>
+      <legend 
+        id={id}
+        className={showLegend ? undefined : "visually-hidden"}
+      >
+        {legend}
+      </legend>
+      <div 
+        className={`radio-group is-${orientation}`} 
+        role="radiogroup" 
+        aria-orientation={orientation}
+        aria-labelledby={id}
+      >
         {radios.map((radioProps, index) => (
           <div key={index}>
             <input 
