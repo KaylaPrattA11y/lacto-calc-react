@@ -1,3 +1,5 @@
+@use "abstracts/mixins/link" as link;
+
 @layer components {
   .details {
     font-size: 0.85rem;
@@ -10,6 +12,7 @@
     }
     &--summary:hover {
       text-decoration: underline;
+      @include link.base;
     }
     &--summary::marker {
       content: none;
@@ -21,6 +24,9 @@
     }
     &--content > div {
       overflow: hidden;
+    }
+    &--content > div > p:first-of-type {
+      margin-block: 0;
     }
     &[open] .details--content {
       grid-template-rows: 1fr;

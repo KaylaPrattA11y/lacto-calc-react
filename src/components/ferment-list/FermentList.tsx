@@ -320,7 +320,7 @@ export default function FermentList() {
           </tbody>
         </table>
         <FermentListPagination table={table} />
-        <FermentListFooter table={table} />       
+        <FermentListFooter table={table} />
         </>
       )}
     </div>

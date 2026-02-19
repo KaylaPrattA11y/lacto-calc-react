@@ -21,6 +21,11 @@ export interface TabDefinition {
 type TabsOrientation = 'horizontal' | 'vertical';
 type TabsActivationMode = 'auto' | 'manual';
 
+export interface TabsController {
+  activeId: string;
+  setActiveId: (id: string) => void;
+}
+
 export interface TabsProps {
   tabs: TabDefinition[];
   initialActiveId?: string;
@@ -30,6 +35,28 @@ export interface TabsProps {
   className?: string; // wrapper class
   onChange?(id: string, index: number): void; // fired when active tab changes
   lazy?: boolean; // mount only active panel content when true
+  controller?: TabsController; // optional external controller for programmatic tab changes
+}
+
+/**
+ * Hook to create a controller for programmatically changing the active tab.
+ * Pass the returned controller to the Tabs component's `controller` prop.
+ * 
+ * @param initialId - Initial active tab ID
+ * @returns TabsController object with activeId and setActiveId
+ * 
+ * @example
+ * const tabController = useTabsController('tab1');
+ * 
+ * // Later, change the active tab programmatically:
+ * tabController.setActiveId('tab2');
+ * 
+ * <Tabs tabs={tabs} controller={tabController} />
+ */
+export function useTabsController(initialId: string = ''): TabsController {
+  const [activeId, setActiveId] = useState<string>(initialId);
+  
+  return useMemo(() => ({ activeId, setActiveId }), [activeId]);
 }
 
 interface InternalTabMeta {
@@ -49,6 +76,7 @@ export default function Tabs({
   className = '',
   onChange,
   lazy = false,
+  controller,
 }: TabsProps) {
   // Build meta (stable memoization to avoid re-renders on content changes)
   const meta: InternalTabMeta[] = useMemo(
@@ -63,15 +91,20 @@ export default function Tabs({
 
   // Determine initial active tab id (must be enabled). Fallback to first enabled.
   const initialActive = useMemo(() => {
+    if (controller?.activeId) return controller.activeId;
     if (initialActiveId) {
       const target = tabs.find(t => t.id === initialActiveId && isEnabled(t));
       if (target) return target.id;
     }
     const firstEnabled = tabs.find(isEnabled);
     return firstEnabled ? firstEnabled.id : tabs[0]?.id; // may be disabled; edge case
-  }, [initialActiveId, tabs]);
+  }, [initialActiveId, tabs, controller?.activeId]);
 
-  const [activeId, setActiveId] = useState<string>(initialActive || '');
+  const [internalActiveId, setInternalActiveId] = useState<string>(initialActive || '');
+  
+  // Use controller's activeId if provided, otherwise use internal state
+  const activeId = controller?.activeId ?? internalActiveId;
+  const setActiveId = controller?.setActiveId ?? setInternalActiveId;
   const [focusIndex, setFocusIndex] = useState<number>(() => meta.findIndex(m => m.id === activeId));
 
   // Keep focusIndex aligned with activeId if active tab changes externally
@@ -99,7 +132,7 @@ export default function Tabs({
         tabRefs.current[idx]?.focus();
       });
     },
-    [meta.length, activationMode, tabs, onChange],
+    [meta.length, activationMode, tabs, onChange, setActiveId],
   );
 
   const activateFocused = useCallback(
@@ -109,7 +142,7 @@ export default function Tabs({
       setActiveId(item.id);
       if (onChange) onChange(item.id, idx);
     },
-    [tabs, onChange],
+    [tabs, onChange, setActiveId],
   );
 
   const handleKeyDown = useCallback(

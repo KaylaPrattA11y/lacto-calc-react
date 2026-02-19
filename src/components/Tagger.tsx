@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { HiPlus, HiX } from "react-icons/hi";
 import Input, { type InputProps } from "./Input";
 
@@ -12,15 +12,19 @@ export default function Tagger({ onChangeTags, ...inputProps }: TaggerProps) {
   const [tagsExceeded, setTagsExceeded] = React.useState(false);
   const maxTags = 5;
   
+  // Notify parent component when tags change
+  useEffect(() => {
+    if (onChangeTags) {
+      onChangeTags(tags);
+    }
+  }, [tags, onChangeTags]);
+  
   function handleAddTag() {
     if (!inputValue.trim() || tagsExceeded) return;
     setTags(prev => {
       const newTags = new Set(prev);
       newTags.add(inputValue.trim());
       setTagsExceeded(newTags.size >= maxTags);
-      if (onChangeTags) {
-        onChangeTags(newTags);
-      }
       return newTags;
     });
     setInputValue("");
@@ -31,9 +35,6 @@ export default function Tagger({ onChangeTags, ...inputProps }: TaggerProps) {
       const newTags = new Set(prev);
       newTags.delete(tagToDelete);
       setTagsExceeded(newTags.size >= maxTags);
-      if (onChangeTags) {
-        onChangeTags(newTags);
-      }
       return newTags;
     });
   }

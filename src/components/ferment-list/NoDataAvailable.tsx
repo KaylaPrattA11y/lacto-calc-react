@@ -80,7 +80,7 @@ export default function NoDataAvailable({setData}: {setData: SetFermentData}) {
   brinePercentage: number;
   saltRequired: number;
   dateCreated: string;
-  fermentName?: string;
+  fermentName: string;
   notes?: string;
   tags?: string[];
   status?: 'Planned' | 'Active' | 'Complete' | undefined;

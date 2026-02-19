@@ -1,0 +1,5 @@
+@mixin base {
+  color: var(--link-color);
+  text-decoration-color: var(--link-underline-color);
+  text-decoration-thickness: var(--link-underline-thickness);
+}

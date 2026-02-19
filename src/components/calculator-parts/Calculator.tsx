@@ -1,5 +1,5 @@
 import React, { useRef, useState, useMemo, useEffect, useContext } from "react";
-import { HiPlus, HiBadgeCheck, HiExclamationCircle } from "react-icons/hi";
+import { HiPlus, HiExclamationCircle } from "react-icons/hi";
 import Input from '../Input';
 import RadioFieldset from "../RadioFieldset";
 import CheckboxFieldset from "../CheckboxFieldset";
@@ -13,8 +13,12 @@ import { toast } from "react-toastify";
 import Tagger from "../Tagger";
 import requestNotificationPermission from "../../utils/requestNotificationPermission";
 import { NotificationsContext } from "../SpecialFeaturesContext";
+import generateFermentName from "../../utils/generateFermentName";
+import handleAddFerment from "../../utils/handleAddFerment";
+import type { TabsController } from "../Tabs";
+import { brinePercentagePresets, dateRangePresets } from "./constants";
 
-export default function Calculator() {
+export default function Calculator({ tabsController }: { tabsController?: TabsController }) {
   const canReceiveNotifications = useContext(NotificationsContext);
   const formRef = useRef<HTMLFormElement|null>(null);
   const [weight, setWeight] = useState<number|null>(null);
@@ -31,8 +35,6 @@ export default function Calculator() {
   const [showCustomBrinePercentageInput, setShowCustomBrinePercentageInput] = useState<boolean>(false);
   const [fermentTags, setFermentTags] = useState<Set<string>>(new Set());
   const [taggerKey, setTaggerKey] = useState<number>(0);
-  const [submitIsDisabled, setSubmitIsDisabled] = useState<boolean>(false);
-  // Removed localData state; only use localStorage for persistence
 
   // Derive unit from presetUnit and customUnit
   const unit = useMemo(() => {
@@ -49,68 +51,6 @@ export default function Calculator() {
       dateEnd: fermentDateRange?.end ? dateToStr(fermentDateRange.end) : undefined
     }
   }, [fermentDateRange]);
-
-  const brinePercentagePresets = [
-    {
-      label: "2.2%",
-      subLabel: "Green beans, cabbage, carrots, beets, cauliflower, potatoes, tomatoes",
-      id: "brine-2",
-      value: "2.2",
-      defaultChecked: true
-    },
-    {
-      label: "3%",
-      subLabel: "Cucumbers, garlic, okra",
-      id: "brine-3",
-      value: "3"
-    },
-    {
-      label: "4%",
-      subLabel: "Peppers (spicy/sweet)",
-      id: "brine-4",
-      value: "4"
-    },
-    {
-      label: "5%",
-      subLabel: "Onions, radishes",
-      id: "brine-5",
-      value: "5"
-    },
-    {
-      label: "10%",
-      subLabel: "Olives",
-      id: "brine-10",
-      value: "10"
-    },
-    {
-      label: "Custom",
-      id: "brine-custom",
-      value: "custom"
-    }
-  ];
-
-  const dateRangePresets = [
-    {
-      label: "1 week",
-      id: "one-week",
-      value: "one-week"
-    },
-    {
-      label: "2 weeks",
-      id: "two-weeks",
-      value: "two-weeks"
-    },
-    {
-      label: "1 month",
-      id: "one-month",
-      value: "one-month"
-    },
-    {
-      label: "Custom",
-      id: "custom",
-      value: "custom"
-    }
-  ];
 
   useEffect(() => {
     const salt = (Number(weight || 0) * Number(brinePercentage || 0)) / 100;
@@ -132,55 +72,54 @@ export default function Calculator() {
   function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     if (!formRef.current) return;
-    let toastMessage = 'Ferment added successfully!';
+    // let toastMessage = 'Ferment added successfully!';
     const stored = localStorage.getItem('fermentData');
     const parsed: FermentEntry[] = stored ? JSON.parse(stored) : [];
-    const newData = [
+    const newEntry = {
+      id: crypto.randomUUID(),
+      weight: weight || 0,
+      unit,
+      brinePercentage: brinePercentage || 0,
+      saltRequired: saltRequired || 0,
+      fermentName: fermentName || generateFermentName(),
+      notes,
+      status: getFermentStatus(dateStart, dateEnd),
+      dateCreated: new Date(),
+      dateStart,
+      dateEnd,
+      sendNotification,
+      tags: [...fermentTags]
+    };
+    const newEntries = [
       ...parsed,
-      {
-        id: crypto.randomUUID(),
-        weight: weight || 0,
-        unit,
-        brinePercentage: brinePercentage || 0,
-        saltRequired: saltRequired || 0,
-        fermentName,
-        notes,
-        status: getFermentStatus(dateStart, dateEnd),
-        dateCreated: new Date(),
-        dateStart,
-        dateEnd,
-        sendNotification,
-        tags: [...fermentTags]
-      }
+      newEntry
     ];
 
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem('fermentData', JSON.stringify(newData));
-      window.dispatchEvent(new Event('fermentDataUpdated'));
-    }
+    handleAddFerment(newEntry, newEntries, tabsController);
+
     if (sendNotification) {
-      toastMessage += ' A notification will be sent when this ferment is complete.';
+      // toastMessage += ' A notification will be sent when this ferment is complete.';
       // Send notification scheduling to service worker
       if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
         navigator.serviceWorker.controller?.postMessage({
           type: 'SCHEDULE_FERMENT_NOTIFICATION',
           payload: {
-            ferment: newData[newData.length - 1]
+            ferment: newEntries[newEntries.length - 1]
           }
         });
       }
     }
-    toast.success(toastMessage, {
-      icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
-      position: "bottom-right",
-      autoClose: 5000,
-      onOpen() {
-        setSubmitIsDisabled(true);
-      },
-      onClose() {        
-        setSubmitIsDisabled(false);
-      }
-    });
+    // toast.success(toastMessage, {
+    //   icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
+    //   position: "bottom-right",
+    //   autoClose: 5000,
+    //   onOpen() {
+    //     setSubmitIsDisabled(true);
+    //   },
+    //   onClose() {        
+    //     setSubmitIsDisabled(false);
+    //   }
+    // });
   }
 
   function handleReset() {
@@ -245,10 +184,12 @@ export default function Calculator() {
             min={2} 
             max={10} 
             required
-            helpText={<p>The percentage of salt relative to the total weight. For example, if you want to use a 2% salt brine, enter 2. Common salt percentages for fermentation range from 2% to 10%, with 2-3% being common for vegetables and up to 5-6% for fish or meat.</p>}
           />
           </>
         )}
+          <Details summary="Salt brine help">
+            <p>The percentage of salt relative to the total weight. For example, if you want to use a 2% salt brine, enter 2. Common salt percentages for fermentation range from 2% to 10%, with 2-3% being common for vegetables and up to 5-6% for fish or meat.</p>
+          </Details>
         </div>
         <fieldset className="grid-salt">
           <legend className="visually-hidden">Calculate salt using:</legend>
@@ -432,7 +373,7 @@ export default function Calculator() {
                 </Details>
               </div>
               <div className="calculator-submit">
-                <button type="submit" className="is-primary" disabled={submitIsDisabled}><HiPlus size={16} /> Add ferment</button>
+                <button type="submit" className="is-primary"><HiPlus size={16} /> Add ferment</button>
                 <button type="reset" className="is-tertiary">Reset</button>
               </div>
             </div>

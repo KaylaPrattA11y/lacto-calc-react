@@ -1,4 +1,6 @@
 @use "form-controls" as form-controls;
 @forward "form-controls";
+@use "link" as link;
+@forward "link";
 @use "tags" as tags;
 @forward "tags";

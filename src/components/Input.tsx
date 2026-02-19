@@ -34,7 +34,7 @@ export default function Input({ label, id, addon, helpText, showLabel = true, de
         )}
       </div>
       {helpText && (
-      <Details summary="Help">
+      <Details summary={`${label} help`}>
         <div className="help-text">{helpText}</div>
       </Details>
       )}

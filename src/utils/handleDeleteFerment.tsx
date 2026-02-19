@@ -3,11 +3,13 @@ import type { FermentEntry } from "../types";
 import { HiExclamation, HiBadgeCheck } from "react-icons/hi";
 import { toast, type ToastContentProps } from "react-toastify";
 
-function DeleteEntryToast({ closeToast }: ToastContentProps) {
+function DeleteEntryToast({ closeToast, data }: ToastContentProps<FermentEntry>) {
+  const ferment = data;
+  
   return ( 
     <div className="toast-cta">
       <div className="toast-cta--message">
-        Are you sure you want to delete this ferment?
+        Are you sure you want to delete {ferment?.fermentName ? `"${ferment.fermentName}"` : 'this ferment'}?
       </div>
       <div className="toast-cta--actions">
         <button onClick={() => closeToast("delete")} className="is-primary is-sm">Delete</button>
@@ -19,7 +21,7 @@ function DeleteEntryToast({ closeToast }: ToastContentProps) {
 
 export default function handleDeleteFerment(
   ferment: FermentEntry, 
-  data: FermentEntry[], 
+  ferments: FermentEntry[], 
   setData: React.Dispatch<React.SetStateAction<FermentEntry[]>>
 ) {
   const rowElement = document.querySelector(
@@ -30,6 +32,7 @@ export default function handleDeleteFerment(
     autoClose: false,
     icon: <HiExclamation size="24px" />,
     position: "top-right",
+    data: ferment,
     onOpen() {
       // Keep the row highlighted while the toast is open
       if (rowElement) {
@@ -37,7 +40,7 @@ export default function handleDeleteFerment(
       }
     },
     onClose(reason) {
-      const newData = data.filter(d => d.id !== ferment.id);
+      const newData = ferments.filter(d => d.id !== ferment.id);
 
       if (rowElement) {
         rowElement.classList.remove('highlight-row');

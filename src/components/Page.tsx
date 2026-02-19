@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import getClientEnv from "../utils/getClientEnv";
 import { ToastContainer } from "react-toastify";
 import InstallPwaPrompt from "./InstallPwaPrompt";
-import Tabs from "./Tabs";
+import Tabs, { useTabsController } from "./Tabs";
 import Calculator from "./calculator-parts/Calculator";
 import FermentList from "./ferment-list/FermentList";
 import Spinner from "./Spinner";
@@ -28,6 +28,7 @@ export default function Page({ pageTitle, children }: { pageTitle: string; child
   const [canInstallPwa, setCanInstallPwa] = useState<boolean | null>(null);
   const [canReceiveNotifications, setCanReceiveNotifications] = useState<boolean | null>(null);
   const clientEnv = getClientEnv();
+  const tabsController = useTabsController('calculator');
 
   // Set up PWA install prompt event listener
   useEffect(() => {
@@ -82,7 +83,7 @@ export default function Page({ pageTitle, children }: { pageTitle: string; child
     {
       id: 'calculator',
       label: <h2>Calculator</h2>,
-      content: <Calculator />,
+      content: <Calculator tabsController={tabsController} />,
     },
     {
       id: 'ferment-list',
@@ -132,6 +133,7 @@ export default function Page({ pageTitle, children }: { pageTitle: string; child
               <Tabs 
                 tabs={tabs} 
                 orientation={isSmallScreen ? "horizontal" : "vertical"}
+                controller={tabsController}
               />
               {children}
               <ToastContainer theme="dark" autoClose={8000} />
