@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -33,19 +33,22 @@ export default function RadioFieldset({ legend, name, showLegend = true, childre
         aria-orientation={orientation}
         aria-labelledby={id}
       >
-        {radios.map((radioProps, index) => (
-          <div key={index}>
-            <input 
-              type="radio"
-              name={name}
-              {...radioProps}
-              onChange={onChangeRadios}
-            />
-            <label htmlFor={radioProps.id}>
-              {radioProps.label} {radioProps.subLabel && <small className="sub-label">- {radioProps.subLabel}</small>}
-            </label>
-          </div>
-        ))}
+        {radios.map((radioProps, index) => {
+          const { label, subLabel, ...inputProps } = radioProps;
+          return (
+            <div key={index}>
+              <input 
+                type="radio"
+                name={name}
+                {...inputProps}
+                onChange={onChangeRadios}
+              />
+              <label htmlFor={inputProps.id}>
+                {label} {subLabel && <small className="sub-label">- {subLabel}</small>}
+              </label>
+            </div>
+          );
+        })}
       </div>
       {children}
     </fieldset>
