@@ -1,35 +1,27 @@
 @layer components {
+  .page-wrapper[data-software-keyboard-visible="true"] .calculator .grid-output {
+    position: static;
+  }
   .calculator {
     container: calculator / inline-size;
-    &:has(input:focus-within, textarea:focus-within, select:focus-within) .grid-output {
-      position: static;
-    }
   }
   .calculator-grid {
     display: grid;
-    gap: 1rem;
+    gap: 1rem 2rem;
     grid-template-areas: 
-      "brine" 
       "salt" 
-      "fName" 
+      "brine" 
       "fDate" 
+      "fName" 
       "fNotes"
       "output";
     @container calculator (width >= 500px) {
       grid-template-columns: 1fr 1fr;
       grid-template-areas: 
-        "brine output"
         "salt output"
-        "fName fDate"
+        "brine output"
+        "fDate fName"
         "fNotes fNotes";
-    }
-    @container calculator (width >= 900px) {
-      gap: 1rem 2rem;
-      grid-template-columns: 1fr 1fr 1fr; 
-      grid-template-areas: 
-        "brine salt output" 
-        "fName fDate output" 
-        "fNotes fNotes output";
     }
   }
   .grid {
@@ -69,9 +61,8 @@
       grid-area: fNotes;
       > div {
         display: grid;
-        gap: 1rem;
+        gap: 1rem 2rem;
         @container fNotes-fieldset (width >= 600px) {
-          gap: 1rem 2rem;
           grid-template-columns: 1fr 1fr;
         }
       }
@@ -125,7 +116,7 @@
       background-size: cover;
       background-position: top center;
       position: absolute;
-      inline-size: 95%;
+      inline-size: 100%;
       block-size: 100%;
       opacity: 0.1;
       z-index: -1;

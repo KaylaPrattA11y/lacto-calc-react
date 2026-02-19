@@ -28,7 +28,11 @@ export default function Calculator({ tabsController }: { tabsController?: TabsCo
   const [saltRequired, setSaltRequired] = useState<number|null>(null);
   const [fermentName, setFermentName] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
-  const [fermentDateRange, setFermentDateRange] = useState<RangeValue<DateValue>|null>(null);
+  // default one-week
+  const { start: defaultStart, end: defaultEnd } = getFermentDateRangePreset('one-week' as FermentDateRangePreset);
+  const [fermentDateRange, setFermentDateRange] = useState<RangeValue<DateValue>|null>(
+    defaultStart && defaultEnd ? { start: defaultStart, end: defaultEnd } : null
+  );
   const [sendNotification, setFermentNotification] = useState<boolean>(false);
   const [showNotificationCheckbox, setShowNotificationCheckbox] = useState<boolean>(true);
   const [showDateRangePicker, setShowDateRangePicker] = useState<boolean>(false);
@@ -140,57 +144,6 @@ export default function Calculator({ tabsController }: { tabsController?: TabsCo
   return (
     <form ref={formRef} onSubmit={e => handleSubmit(e)} onReset={handleReset} className="calculator">
       <div className="calculator-grid">
-        <div className="grid-brine">
-          <RadioFieldset
-            className="brine-presets"
-            legend="Salt Brine"
-            // orientation="horizontal"
-            name="brinePercentage"
-            onChangeRadios={e => {
-              const val = e.target.value;
-
-              setShowCustomBrinePercentageInput(val === 'custom');
-              if (val === 'custom') {
-                setBrinePercentage(null);
-                return;
-              }
-              const numVal = parseFloat(val);
-              setBrinePercentage(numVal);
-            }}
-            radios={brinePercentagePresets.map(p => ({
-              label: p.label,
-              id: p.id,
-              value: String(p.value),
-              subLabel: p.subLabel,
-              defaultChecked: p.defaultChecked
-            }))}
-          />
-          {showCustomBrinePercentageInput && (
-          <>
-          <Input 
-            label="Salt brine" 
-            showLabel={false}
-            id="brine-percentage" 
-            addon="%" 
-            name="brinePercentage" 
-            type="number" 
-            step="0.1" 
-            value={String(brinePercentage || '')}
-            onChange={e => {
-              const raw = e.currentTarget.value;
-              const v = raw === '' ? null : parseFloat(raw);
-              setBrinePercentage(Number.isNaN(v as number) ? null : (v as number));
-            }}
-            min={2} 
-            max={10} 
-            required
-          />
-          </>
-        )}
-          <Details summary="Salt brine help">
-            <p>The percentage of salt relative to the total weight. For example, if you want to use a 2% salt brine, enter 2. Common salt percentages for fermentation range from 2% to 10%, with 2-3% being common for vegetables and up to 5-6% for fish or meat.</p>
-          </Details>
-        </div>
         <fieldset className="grid-salt">
           <legend className="visually-hidden">Calculate salt using:</legend>
           <div className="salt-calc-grid">
@@ -201,6 +154,8 @@ export default function Calculator({ tabsController }: { tabsController?: TabsCo
                 name="weight" 
                 type="number"
                 step="0.01"
+                min={0}
+                max={10000}
                 value={String(weight || '')}
                 onChange={e => {
                   const raw = e.currentTarget.value;
@@ -254,23 +209,62 @@ export default function Calculator({ tabsController }: { tabsController?: TabsCo
             </div>
           </div>
         </fieldset>
-        <div className="grid-fname">
-          <Input 
-            label="Ferment name (optional)" 
-            id="ferment-name"
-            name="fermentName" 
-            value={fermentName}
-            onChange={e => {
-              const v = e.currentTarget.value;
-              setFermentName(v);
+        <div className="grid-brine">
+          <RadioFieldset
+            className="brine-presets"
+            legend="Salt Brine"
+            // orientation="horizontal"
+            name="brinePercentage"
+            onChangeRadios={e => {
+              const val = e.target.value;
+
+              setShowCustomBrinePercentageInput(val === 'custom');
+              if (val === 'custom') {
+                setBrinePercentage(null);
+                return;
+              }
+              const numVal = parseFloat(val);
+              setBrinePercentage(numVal);
             }}
-            type="text"
+            radios={brinePercentagePresets.map(p => ({
+              label: p.label,
+              id: p.id,
+              value: String(p.value),
+              subLabel: p.subLabel,
+              defaultChecked: p.defaultChecked,
+              required: true
+            }))}
           />
+          {showCustomBrinePercentageInput && (
+          <>
+          <Input 
+            label="Salt brine" 
+            showLabel={false}
+            id="brine-percentage" 
+            addon="%" 
+            name="brinePercentage" 
+            type="number" 
+            step="0.1" 
+            value={String(brinePercentage || '')}
+            onChange={e => {
+              const raw = e.currentTarget.value;
+              const v = raw === '' ? null : parseFloat(raw);
+              setBrinePercentage(Number.isNaN(v as number) ? null : (v as number));
+            }}
+            min={2} 
+            max={10} 
+            required
+          />
+          </>
+        )}
+          <Details summary="Salt brine help">
+            <p>The percentage of salt relative to the total weight. For example, if you want to use a 2% salt brine, enter 2. Common salt percentages for fermentation range from 2% to 10%, with 2-3% being common for vegetables and up to 5-6% for fish or meat.</p>
+          </Details>
         </div>
         <div className="grid-fDate">
           <div>
             <RadioFieldset
-              legend="Ferment duration (optional)"
+              legend="Ferment duration"
               name="fermentDuration"
               orientation="horizontal"
               onChangeRadios={e => {
@@ -289,7 +283,9 @@ export default function Calculator({ tabsController }: { tabsController?: TabsCo
               radios={dateRangePresets.map(p => ({
                 label: p.label,
                 id: p.id,
-                value: p.value
+                value: p.value,
+                defaultChecked: p.defaultChecked,
+                required: true
               }))}
             ></RadioFieldset>
           </div>
@@ -334,8 +330,30 @@ export default function Calculator({ tabsController }: { tabsController?: TabsCo
           />
           )}
         </div>
+        <div className="grid-fname">
+          <Input 
+            label="Ferment name (optional)" 
+            id="ferment-name"
+            name="fermentName" 
+            value={fermentName}
+            onChange={e => {
+              const v = e.currentTarget.value;
+              setFermentName(v);
+            }}
+            type="text"
+          />
+        </div>
         <div className="grid-fNotes">
           <div>
+            <div>
+              <Tagger
+              key={taggerKey}
+              label="Tags (optional)" 
+              id="tags" 
+              name="tags"
+              onChangeTags={setFermentTags}
+              />
+            </div>
             <div>
               <label htmlFor="ferment-notes">Ferment notes (optional)</label>
               <textarea 
@@ -348,15 +366,6 @@ export default function Calculator({ tabsController }: { tabsController?: TabsCo
                   setNotes(v);
                 }}
                 rows={4}></textarea>
-            </div>
-            <div>
-              <Tagger
-              key={taggerKey}
-              label="Tags (optional)" 
-              id="tags" 
-              name="tags"
-              onChangeTags={setFermentTags}
-              />
             </div>
           </div>
         </div>

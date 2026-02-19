@@ -41,7 +41,8 @@ export const dateRangePresets = [
   {
     label: "1 week",
     id: "one-week",
-    value: "one-week"
+    value: "one-week",
+    defaultChecked: true
   },
   {
     label: "2 weeks",
