@@ -5,13 +5,16 @@ import { type FermentEntry, type SetFermentData } from '../types';
 
 export default function importFermentEntries(setData: SetFermentData) {
   // Trigger file input click to import JSON file
-  const input = document.createElement('input');
+  const input = document.querySelector('input[data-testid="file-input"]') as HTMLInputElement;
+  
+  input.setAttribute('data-testid', 'file-input');
   input.type = 'file';
   input.accept = 'application/json';
   input.onchange = (e) => {
     const file = (e.target as HTMLInputElement).files?.[0];
     if (!file) return;
     const reader = new FileReader();
+
     reader.onload = (event) => {
       try {
         const importedData = JSON.parse(event.target?.result as string) as FermentEntry[];

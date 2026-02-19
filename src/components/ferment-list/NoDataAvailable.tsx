@@ -21,6 +21,7 @@ export default function NoDataAvailable({setData}: {setData: SetFermentData}) {
       >
         <HiOutlineUpload size={18} /> Import (.json)
       </button>
+      <input type="file" data-testid="file-input" hidden />
       <h4>Manual import</h4>
       <p>If you wish to create a JSON file manually, you can use any text editor to write the JSON data following the format used by this app:</p>
       <h5>Example JSON format:</h5>
@@ -78,7 +79,7 @@ export default function NoDataAvailable({setData}: {setData: SetFermentData}) {
   unit: string;
   brinePercentage: number;
   saltRequired: number;
-  dateCreated: Date;
+  dateCreated: string;
   fermentName?: string;
   notes?: string;
   tags?: string[];

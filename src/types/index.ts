@@ -29,7 +29,7 @@ export type FermentEntry = {
   unit: string; // required, value for weight unit (e.g. "g", "kg", "oz", "lb")
   brinePercentage: number; // required, numeric value for salt brine percentage (e.g. 2.2 for 2.2%)
   saltRequired: number; // required, numeric value for calculated salt required for the ferment
-  dateCreated: Date; // required, Date object for when the ferment entry was created
+  dateCreated: string; // required, Date object output for when the ferment entry was created
   fermentName?: string; // optional, string value for the name of the ferment
   notes?: string; // optional, string value for any notes about the ferment
   status?: FermentStatus; // optional, status of the ferment ('Planned', 'Active', 'Complete')
