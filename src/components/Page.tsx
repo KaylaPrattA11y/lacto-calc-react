@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 import getClientEnv from "../utils/getClientEnv";
 import { ToastContainer } from "react-toastify";
 import InstallPwaPrompt from "./InstallPwaPrompt";
@@ -25,6 +26,11 @@ export default function Page({ pageTitle, children }: { pageTitle: string; child
     if (typeof window === "undefined") return false;
     return window.matchMedia("(max-width: 900px)").matches;
   });
+  const [viewportHeight, setViewportHeight] = useState<number>(
+    typeof window !== "undefined" ? window.visualViewport?.height || window.innerHeight : 0
+  );
+  const [debouncedViewportHeight] = useDebounce(viewportHeight, 150);
+  const [isSoftwareKeyboardOpen, setIsSoftwareKeyboardOpen] = useState<boolean>(false);
   const [canInstallPwa, setCanInstallPwa] = useState<boolean | null>(null);
   const [canReceiveNotifications, setCanReceiveNotifications] = useState<boolean | null>(null);
   const clientEnv = getClientEnv();
@@ -79,6 +85,35 @@ export default function Page({ pageTitle, children }: { pageTitle: string; child
     };
   }, []);
 
+  // Listen to visualViewport resize and update viewport height
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.visualViewport) return;
+
+    const handleViewportResize = () => {
+      setViewportHeight(window.visualViewport?.height || window.innerHeight);
+    };
+
+    window.visualViewport.addEventListener('resize', handleViewportResize);
+
+    return () => {
+      window.visualViewport?.removeEventListener('resize', handleViewportResize);
+    };
+  }, []);
+
+  // Update keyboard state based on debounced viewport height
+  useEffect(() => {
+    const keyboardOpen = debouncedViewportHeight < window.innerHeight - 50; // 50px threshold
+    setIsSoftwareKeyboardOpen(keyboardOpen);
+    
+    if (import.meta.env.DEV) {
+      console.log('[Page] Keyboard state:', {
+        keyboardOpen,
+        viewportHeight: debouncedViewportHeight,
+        windowHeight: window.innerHeight,
+      });
+    }
+  }, [debouncedViewportHeight]);
+
   const tabs = [
     {
       id: 'calculator',
@@ -91,7 +126,7 @@ export default function Page({ pageTitle, children }: { pageTitle: string; child
       content: <FermentList />,
     }
   ];
-  
+
   // Track screen size to switch tab orientation
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -127,7 +162,7 @@ export default function Page({ pageTitle, children }: { pageTitle: string; child
         {isLoading ? (
           <Spinner />
         ) : (
-          <div className="page-wrapper">
+          <div className="page-wrapper" data-software-keyboard-visible={isSoftwareKeyboardOpen}>
             <main className="page-main" data-client-env={clientEnv}>
               <h1 className="visually-hidden">{pageTitle}</h1>
               <Tabs 

@@ -39,6 +39,8 @@ export default function handleAddFerment(
         case "view-entry":
           if (tabsController) {
             tabsController.setActiveId('ferment-list');
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
           }
           break;
         default:
