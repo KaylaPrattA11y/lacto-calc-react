@@ -23,7 +23,7 @@ export default function importFermentEntries(setData: SetFermentData) {
         // Dispatch custom event to notify FermentList of new data
         window.dispatchEvent(new Event('fermentDataUpdated'));
         toast.success('Ferment data imported successfully.', {
-          icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
+          icon: <HiBadgeCheck color="var(--accent)" size="24px" />,
           position: "bottom-right",
         });
       } catch (error) {

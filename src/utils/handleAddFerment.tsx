@@ -30,7 +30,7 @@ export default function handleAddFerment(
   }
   
   toast.success(AddEntryToast, {
-    icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
+    icon: <HiBadgeCheck color="var(--accent)" size="24px" />,
     position: "bottom-right",
     autoClose: 5000,
     data: ferment,

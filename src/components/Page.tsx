@@ -118,7 +118,7 @@ export default function Page({ pageTitle, children }: { pageTitle: string; child
     {
       id: 'calculator',
       label: <h2>Calculator</h2>,
-      content: <Calculator tabsController={tabsController} />,
+      content: <Calculator tabsController={tabsController} isSmallScreen={isSmallScreen} />,
     },
     {
       id: 'ferment-list',

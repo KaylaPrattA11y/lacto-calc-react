@@ -35,7 +35,7 @@ export default function NoDataAvailable({setData}: {setData: SetFermentData}) {
     whiteSpace: 'pre-wrap',
     wordBreak: 'break-word',
     overflowX: 'auto',
-    background: 'var(--border-color)',
+    background: 'var(--border)',
     padding: '1rem',
     borderRadius: '6px'
   }}
@@ -68,7 +68,7 @@ export default function NoDataAvailable({setData}: {setData: SetFermentData}) {
     whiteSpace: 'pre-wrap',
     wordBreak: 'break-word',
     overflowX: 'auto',
-    background: 'var(--border-color)',
+    background: 'var(--border)',
     padding: '1rem',
     borderRadius: '6px'
   }}

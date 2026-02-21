@@ -3,7 +3,6 @@
     -webkit-appearance: none;
     appearance: none;
     border: none;
-    border-radius: var(--border-radius);
     padding: 0.5rem 1rem;
     font-size: inherit;
     font-family: inherit;
@@ -25,6 +24,9 @@
   }
 }
 @layer components {
+  button:is(.is-secondary, .is-primary, .is-tertiary) {
+    border-radius: var(--border-radius);
+  }
   button.is-sm {
     padding: 0.25rem 0.5rem;
     font-size: 0.85rem;

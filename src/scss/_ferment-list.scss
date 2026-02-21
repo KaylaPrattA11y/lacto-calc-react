@@ -8,7 +8,7 @@
     }
     :where(th, td) {
       padding: 0.5rem;
-      border-block-end: 1px solid var(--border-color);
+      border-block-end: 1px solid var(--border);
       vertical-align: top;
       > .ferment-list--cell {
         max-inline-size: 35ch;
@@ -27,7 +27,7 @@
       }
     }
     &--header {
-      margin-block-end: 1rem;
+      margin-block: 1rem;
       display: flex;
       align-items: center;
       > h2 {
@@ -84,10 +84,10 @@
 @layer utilities {
   .highlight-row {
     td:first-child {
-      outline: 2px solid var(--accent-color);
+      outline: 2px solid var(--accent);
       border-radius: var(--border-radius);
     }
-    background-color: var(--border-color);
+    background-color: var(--border);
     transition: background-color 0.3s;
   }
 }

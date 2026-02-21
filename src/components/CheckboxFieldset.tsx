@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { HiCheck } from "react-icons/hi";
 
 interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -24,11 +25,14 @@ export default function CheckboxFieldset({ legend, name, showLegend = true, chil
       <div className="radio-group">
         {checkboxes.map((checkboxProps, index) => (
           <div key={index}>
-            <input 
-              type="checkbox"
-              name={name}
-              {...checkboxProps}
-            />
+            <div className="checkbox-wrapper">
+              <input 
+                type="checkbox"
+                name={name}
+                {...checkboxProps}
+              />
+              {checkboxProps.checked && <HiCheck color="var(--accent)" size="var(--radio-size)" />}
+            </div>
             <label htmlFor={checkboxProps.id}>{checkboxProps.label}</label>
           </div>
         ))}

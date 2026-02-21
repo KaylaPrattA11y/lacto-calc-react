@@ -1,14 +1,26 @@
 :root {
   --toastify-toast-width: max-content;
   --toastify-font-family: "Montserrat Alternates", sans-serif;
-  --toastify-color-dark: var(--dark-teal);
+  --toastify-color-dark: var(--bg-mid);
   --toastify-color-progress-success: var(--tealy-green);
   --toastify-icon-color-success: var(--tealy-green);
 }
 @layer components {
+  .Toastify__toast-container {
+    container: toast-container / inline-size;
+  }
+  @media only screen and (max-width: 480px) {
+    .Toastify__toast-container {
+      width: 100% !important;
+    }
+  }
   .toast-cta {
     display: grid;
-    grid-template-columns: minmax(150px, 250px) max-content;
+    gap: 0.5rem;
+    align-items: start;
+    @container toast-container (width >= 400px) {
+    grid-template-columns: minmax(min-content, 250px) auto;
+    }
     &--message {
       align-self: center;
       font-size: 0.9rem;

@@ -52,12 +52,12 @@ export default function handleDeleteFerment(
           localStorage.setItem('fermentData', JSON.stringify(newData));
           if (ferment.fermentName) {
             toast.success(`Deleted ferment: ${ferment.fermentName}`, {
-              icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
+              icon: <HiBadgeCheck color="var(--accent)" size="24px" />,
               position: "bottom-right",
             });
           } else {
             toast.success(`Deleted ferment entry.`, {
-              icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
+              icon: <HiBadgeCheck color="var(--accent)" size="24px" />,
               position: "bottom-right",
             });
           }

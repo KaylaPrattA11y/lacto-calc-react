@@ -1,60 +1,44 @@
 @layer components {
-  .page-wrapper[data-software-keyboard-visible="true"] .calculator .grid-output {
+  .page-wrapper[data-software-keyboard-visible="true"] .calculator .jar-result-text {
     position: static;
   }
   .calculator {
     container: calculator / inline-size;
+    block-size: 100%;
   }
   .calculator-grid {
     display: grid;
-    gap: 1rem 2rem;
-    grid-template-areas: 
-      "salt" 
-      "brine" 
-      "fDate" 
-      "fName" 
-      "fNotes"
-      "output";
-    @container calculator (width >= 500px) {
+    gap: 1rem 0;
+    block-size: 100%;
+    @container calculator (width >= 700px) {
       grid-template-columns: 1fr 1fr;
+    }
+    &--right {
       grid-template-areas: 
-        "salt output"
-        "brine output"
-        "fDate fName"
-        "fNotes fNotes";
+      "output"
+      "fName"
+      "fNotes";
+      border-inline-start: 1px solid var(--border);
+    }
+  }
+  .calculator-grid > div {
+    display: grid;
+    gap: 1rem 2rem;
+    align-content: start;
+    padding: 1rem;
+    @container calculator (width >= 700px) {
+      padding: 2rem;
     }
   }
   .grid {
     &-brine {
       container: brine-fieldset / inline-size;
-      grid-area: brine;
     }
     &-salt {
       container: salt-fieldset / inline-size;
-      grid-area: salt;
-    }
-    &-output {
-      grid-area: output;
-      @container calculator (width < 500px) {
-        position: sticky;
-        bottom: 0;
-        inline-size: calc(100% + calc(var(--page-main-padding) * 2));
-        margin-inline-start: calc(var(--page-main-padding) * -1);
-        margin-block-end: calc(var(--page-main-padding) * -1);
-      }
     }
     &-fName {
       grid-area: fName;
-    }
-    &-fDate {
-      grid-area: fDate;
-      display: grid;
-      gap: 0.5rem;
-      align-content: start;
-      .radio-group.is-horizontal {
-        grid-auto-flow: unset;
-        grid-template-columns: repeat(3, 1fr);
-      }
     }
     &-fNotes {
       container: fNotes-fieldset / inline-size;
@@ -67,73 +51,23 @@
         }
       }
     }
+    &-output {
+      grid-area: output;
+    }
   }
   .brine-presets .radio-group {
     margin-block-end: 0.5rem;
-    display: grid;
-    gap: 0.5rem;
-    grid-template-areas: 
-      "preset1" 
-      "preset2" 
-      "preset3" 
-      "preset4" 
-      "preset5" 
-      "preset6";
-    @container brine-fieldset (width >= 400px) {
-      grid-template-areas: 
-        "preset1 preset2" 
-        "preset3 preset4" 
-        "preset5 preset5"
-        "preset6 preset6";
-    }
-    @each $i in 1, 2, 3, 4, 5, 6 {
-      > div:nth-child(#{$i}) {
-        grid-area: preset#{$i};
-      }
-    }
-  }
-  .calculator-output {
-    position: relative;
-    display: grid;
-    gap: 0.25rem;
-    text-align: center;
-    block-size: 100%;
-    align-content: center;
-    box-sizing: border-box;
-    -webkit-mask: var(--mask-top);
-    mask: var(--mask-top);
-    padding: 2rem 1rem 1rem;
-    background-color: var(--border-color);
-    @container calculator (width >= 500px) {
-      -webkit-mask: var(--mask);
-      mask: var(--mask);
-      padding: 1rem 2rem 2rem;
-      border-radius: var(--border-radius);
-    }
-    &::before {
-      content: "";
-      background-image: url("../assets/mason-jar.png");
-      background-size: cover;
-      background-position: top center;
-      position: absolute;
-      inline-size: 100%;
-      block-size: 100%;
-      opacity: 0.1;
-      z-index: -1;
-    }
-    output {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    .details--summary {
-      justify-content: center;
+    > div:last-of-type {
+      flex: 1 0 100%;
     }
   }
   .calculator-submit {
     display: grid;
     gap: 0.5rem;
-    button {
-      inline-size: 100%;
+    justify-content: start;
+    grid-template-columns: 1fr 1fr;
+    @container calculator (width >= 700px) {
+      grid-template-columns: auto auto;
     }
   }
   .salt-calc-grid {
@@ -142,5 +76,37 @@
     @container salt-fieldset (width >= 300px) {
       grid-template-columns: 1fr 1fr;
     }
+  }
+  .jar-area {
+    display: grid;
+    justify-items: center;
+  }
+  .jar-result-text {
+    @container calculator (width < 500px) {
+      background-color: var(--bg-panel);
+      -webkit-mask: var(--mask-top);
+      padding: 2rem 0 1rem;
+      mask: var(--mask-top);
+      position: sticky;
+      bottom: 0;
+      inline-size: calc(100% + calc(var(--page-main-padding) * 2));
+      margin-block-end: calc(var(--page-main-padding) * -1);
+    }
+    > p {
+      padding-inline: var(--page-main-padding);
+    }
+    text-align: center;
+    .result-sub {
+      font-size: 0.88rem;
+    }
+    .result-sub:last-of-type {
+      margin-block-start: 0.5rem;
+    }
+    .result-big {
+      font-size: 2rem;
+    }
+  }
+  .jar-svg {
+    max-inline-size: 250px;
   }
 }

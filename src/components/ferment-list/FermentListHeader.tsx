@@ -46,7 +46,7 @@ export default function FermentListHeader({data, setData}: {data: FermentEntry[]
     // Dispatch custom event to notify FermentList of data deletion
     window.dispatchEvent(new Event('fermentDataUpdated'));
     toast.success('All ferments deleted successfully.', {
-      icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
+      icon: <HiBadgeCheck color="var(--accent)" size="24px" />,
       position: "bottom-right",
     });
   }
@@ -60,7 +60,7 @@ export default function FermentListHeader({data, setData}: {data: FermentEntry[]
     a.click();
     URL.revokeObjectURL(url);
     toast.success('Ferment data exported successfully.', {
-      icon: <HiBadgeCheck color="var(--accent-color)" size="24px" />,
+      icon: <HiBadgeCheck color="var(--accent)" size="24px" />,
       position: "bottom-right",
     });
   }

@@ -8,13 +8,13 @@
     .react-aria-DateRangePicker {
         --field-border: var(--spectrum-global-color-gray-400);
         --field-background: var(--spectrum-global-color-gray-50);
-        --text-color: var(--spectrum-alias-text-color);
-        --text-color-placeholder: var(--spectrum-global-color-gray-700);
-        --text-color-invalid: var(--spectrum-global-color-red-600);
+        --text: var(--spectrum-alias-text-color);
+        --text-placeholder: var(--spectrum-global-color-gray-700);
+        --text-invalid: var(--spectrum-global-color-red-600);
         --highlight-background: var(--button-primary-background-color);
         --highlight-foreground: var(--button-primary-color);
         --highlight-background-invalid: var(--spectrum-global-color-static-red-600);
-        color: var(--text-color)
+        color: var(--text)
     }
 
     .react-aria-DateRangePicker .react-aria-Group {
@@ -44,7 +44,7 @@
     }
 
     .react-aria-CalendarCell[data-today="true"] {
-        background-color: var(--background-color);
+        background-color: var(--bg);
         font-weight: 700;
     }
 
@@ -68,7 +68,7 @@
     }
 
     .react-aria-DateRangePicker .react-aria-Button[data-focus-visible] {
-        box-shadow: 0 0 0 2px var(--accent-color)
+        box-shadow: 0 0 0 2px var(--accent)
     }
 
     .react-aria-DateRangePicker [slot=description] {
@@ -76,7 +76,7 @@
     }
 
     .react-aria-DateRangePicker [slot=errorMessage] {
-        color: var(--text-color-invalid);
+        color: var(--text-invalid);
         font-size: 12px
     }
 
@@ -104,7 +104,7 @@
     }
 
     .react-aria-DateSegment[data-placeholder] {
-        color: var(--text-color-placeholder);
+        color: var(--text-placeholder);
         font-style: italic
     }
 
@@ -118,7 +118,7 @@
     }
 
     .react-aria-DateSegment[data-invalid] {
-        color: var(--text-color-invalid)
+        color: var(--text-invalid)
     }
 
     .react-aria-DateSegment[data-invalid]:focus {
@@ -132,14 +132,14 @@
         --button-background: var(--spectrum-global-color-gray-50);
         --button-background-pressed: var(--spectrum-global-color-gray-100);
         --button-border: var(--spectrum-global-color-gray-400);
-        --text-color: var(--spectrum-alias-text-color);
-        --text-color-disabled: var(--spectrum-alias-text-color-disabled);
-        --text-color-invalid: var(--spectrum-global-color-red-600);
+        --text: var(--spectrum-alias-text-color);
+        --text-disabled: var(--spectrum-alias-text-color-disabled);
+        --text-invalid: var(--spectrum-global-color-red-600);
         --pressed-color: var(--spectrum-global-color-gray-200);
         --unavailable-color: var(--spectrum-global-color-red-600);
         --invalid-color: var(--spectrum-global-color-static-red-600);
         width: fit-content;
-        color: var(--text-color)
+        color: var(--text)
     }
 
     .react-aria-RangeCalendar header {
@@ -158,7 +158,7 @@
     .react-aria-RangeCalendar header .react-aria-Button {
         background: var(--button-background);
         border: 1px solid var(--button-border);
-        color: var(--text-color);
+        color: var(--text);
         -webkit-appearance: none;
         appearance: none;
         vertical-align: middle;
@@ -230,7 +230,7 @@
     }
 
     .react-aria-RangeCalendar .react-aria-CalendarCell[data-disabled] {
-        color: var(--text-color-disabled)
+        color: var(--text-disabled)
     }
 
     .react-aria-RangeCalendar .react-aria-CalendarCell[data-unavailable] {
@@ -244,13 +244,13 @@
     }
 
     .react-aria-RangeCalendar [slot=errorMessage] {
-        color: var(--text-color-invalid);
+        color: var(--text-invalid);
         font-size: 12px
     }
 
     .react-aria-Popover {
         border: 1px solid var(--spectrum-global-color-gray-400);
-        background: var(--border-color);
+        background: var(--bg-panel);
         border-radius: 6px;
         padding: 1.25rem;
         overflow: auto;
@@ -290,9 +290,9 @@
             forced-color-adjust: none;
             --field-border: ButtonBorder;
             --field-background: Field;
-            --text-color: FieldText;
-            --text-color-placeholder: FieldText;
-            --text-color-invalid: LinkText;
+            --text: FieldText;
+            --text-placeholder: FieldText;
+            --text-invalid: LinkText;
             --highlight-background: var(--button-primary-background-color);
             --highlight-foreground: var(--button-primary-color);
             --highlight-background-invalid: LinkText
@@ -318,9 +318,9 @@
             --button-border: ButtonBorder;
             --button-border-disabled: GrayText;
             --button-background: ButtonFace;
-            --text-color: ButtonText;
-            --text-color-disabled: GrayText;
-            --text-color-invalid: LinkText;
+            --text: ButtonText;
+            --text-disabled: GrayText;
+            --text-invalid: LinkText;
             --unavailable-color: GrayText;
             --invalid-color: LinkText;
             --pressed-color: Canvas;

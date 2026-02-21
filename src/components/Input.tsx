@@ -8,9 +8,10 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   showLabel?: boolean;
   helpText?: string | React.ReactNode;
   description?: string;
+  ref?: React.Ref<HTMLInputElement>;
 }
 
-export default function Input({ label, id, addon, helpText, showLabel = true, description, ...rest }: InputProps) {
+export default function Input({ label, id, addon, helpText, ref, showLabel = true, description, ...rest }: InputProps) {
   useEffect(() => {
     
   }, [addon, rest.disabled]);
@@ -25,6 +26,7 @@ export default function Input({ label, id, addon, helpText, showLabel = true, de
             id={id}
             {...(showLabel ? {} : { 'aria-label': label })}
             {...rest} 
+            ref={ref}
             />
         </div>
         {addon && (

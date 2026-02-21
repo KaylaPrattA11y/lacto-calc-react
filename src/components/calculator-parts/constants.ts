@@ -1,7 +1,7 @@
 export const brinePercentagePresets = [
   {
     label: "2.2%",
-    subLabel: "Green beans, cabbage, carrots, beets, cauliflower, potatoes, tomatoes",
+    subLabel: "Green beans, cabbage, carrots, beets, tomatoes",
     id: "brine-2",
     value: "2.2",
     defaultChecked: true

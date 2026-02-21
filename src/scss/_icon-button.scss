@@ -3,8 +3,8 @@
     position: relative;
     &::after {
       position: absolute;
-      color: var(--input-background-color);
-      background-color: var(--text-color);
+      color: var(--bg);
+      background-color: var(--text);
       border-radius: var(--border-radius);
       padding: 0.15rem 0.25rem;
     }

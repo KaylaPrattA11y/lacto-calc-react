@@ -5,16 +5,16 @@
     border-radius: 0.25em;
     font-size: 0.75rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text);
     line-height: normal;
     &.is-info {
-      background-color: var(--lilac-ash);
+      background-color: var(--teal-mid);
     }
     &.is-planned {
-      background-color: var(--dark-teal);
+      background-color: var(--bg-mid);
     }
     &.is-active {
-      background-color: var(--lobster-pink); 
+      background-color: var(--accent); 
     }
     &.is-complete {
       background-color: var(--tealy-green); 

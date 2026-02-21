@@ -1,15 +1,15 @@
 @layer components {
   .tabs {
-    --background-color: var(--dark-teal);
-    --active-background-color: var(--deep-space-blue);
-    background-color: var(--active-background-color);
+    background-color: var(--bg);
     block-size: 100%;
+    border-block-end: 1px solid var(--border);
     &--tablist {
       display: flex;
-      background-color: var(--background-color);
+      background-color: var(--bg-mid);
     }
     &--tab {
       padding: 1rem;
+      color: var(--text);
       background-color: transparent;
       border: 0;
       transition: background-color 300ms;
@@ -25,11 +25,9 @@
         font-weight: inherit;
       }
       &[aria-selected="true"] {
-        color: var(--text-color);
-        background-color: var(--active-background-color);
+        background-color: var(--bg-panel);
       }
       &[aria-selected="false"] {
-        color: var(--text-muted-color);
         cursor: pointer;
       }
       &:focus-visible {
@@ -38,19 +36,25 @@
       }
     }
     &--tabpanels {
-      background-color: var(--active-background-color);
+      background-color: var(--bg);
     }
     &--tabpanel {
       container: tabpanel / inline-size;
-      padding: 1rem;
+      block-size: 100%;
     }
     &--tabpanel:focus-visible {
       outline: 1px solid black;
       outline-offset: -2px;
     }
     &.is-horizontal {
+      > [role="tablist"] > [role="tab"] {
+        border-block-end: 3px solid transparent;
+        &[aria-selected="true"] {
+          border-block-end-color: var(--accent);
+        }
+      }
       > [role="tablist"] > [role="tab"]:not(:last-of-type) {
-        border-inline-end: 1px solid color-mix(in srgb, var(--background-color) 80%, black);
+        border-inline-end: 1px solid var(--border);
       }
     }
     &.is-vertical {
@@ -59,9 +63,14 @@
       > [role="tablist"] {
         display: grid;
         grid-template-rows: min-content min-content;
+        border-inline-end: 1px solid var(--border);
       }
-      > [role="tablist"] > [role="tab"]:not(:last-of-type) {
-        border-block-end: 1px solid color-mix(in srgb, var(--background-color) 80%, black);
+      > [role="tablist"] > [role="tab"] {
+        border-inline-start: 3px solid transparent;
+        border-block-end: 1px solid var(--border);
+        &[aria-selected="true"] {
+          border-inline-start-color: var(--accent);
+        }
       }
     }
   }

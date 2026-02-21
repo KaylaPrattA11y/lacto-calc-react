@@ -1,7 +1,5 @@
 @layer components {
   .radio-group {
-    display: grid;
-    gap: 0.5rem;
     margin-block-start: 0.5rem;
     > div {
       display: flex;
@@ -10,8 +8,28 @@
         flex-shrink: 0;
       }
     }
+    &.is-vertical {
+      display: grid;
+      gap: 0.5rem;
+    }
     &.is-horizontal {
-      grid-auto-flow: column;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 2rem;
+      > div:last-of-type {
+        flex: 1 0 100%;
+      }
+    }
+    .sub-label {
+      color: var(--text-dim);
+    }
+  }
+  .checkbox-wrapper {
+    position: relative;
+    inline-size: var(--radio-size);
+    block-size: var(--radio-size);
+    svg {
+      pointer-events: none;
     }
   }
 }

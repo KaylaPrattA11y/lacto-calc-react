@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { HiPlus, HiX } from "react-icons/hi";
 import Input, { type InputProps } from "./Input";
 
@@ -7,11 +7,12 @@ interface TaggerProps extends InputProps {
 }
 
 export default function Tagger({ onChangeTags, ...inputProps }: TaggerProps) {
-  const [inputValue, setInputValue] = React.useState("");
-  const [tags, setTags] = React.useState<Set<string>>(new Set());
-  const [tagsExceeded, setTagsExceeded] = React.useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [tags, setTags] = useState<Set<string>>(new Set());
+  const [tagsExceeded, setTagsExceeded] = useState(false);
   const maxTags = 5;
-  
+  const inputRef = useRef<HTMLInputElement|null>(null);
+
   // Notify parent component when tags change
   useEffect(() => {
     if (onChangeTags) {
@@ -28,6 +29,9 @@ export default function Tagger({ onChangeTags, ...inputProps }: TaggerProps) {
       return newTags;
     });
     setInputValue("");
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   }
 
   function handleDeleteTag(tagToDelete: string) {
@@ -42,6 +46,7 @@ export default function Tagger({ onChangeTags, ...inputProps }: TaggerProps) {
   return (
     <div className="tagger">
       <Input 
+        ref={inputRef}
         type="text" 
         className="tagger--input" 
         value={inputValue}
