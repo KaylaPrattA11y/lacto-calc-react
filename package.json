@@ -31,11 +31,11 @@
     "vitest": "^4.0.18"
   },
   "devDependencies": {
-    "@eslint/js": "^9.0.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/eslint-plugin-jsx-a11y": "^6.10.1",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "eslint-plugin-astro": "^1.6.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "jsdom": "^28.1.0",

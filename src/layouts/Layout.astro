@@ -1,5 +1,7 @@
 ---
 import "../scss/site.scss";
+
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <!doctype html>
@@ -7,9 +9,9 @@ import "../scss/site.scss";
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/png" href={import.meta.env.BASE_URL + "/icon.png"} />
-		<link rel="icon" href={import.meta.env.BASE_URL + "/icon.ico"} />
-		<link rel="manifest" href={import.meta.env.BASE_URL + "/manifest.json"} />
+		<link rel="icon" type="image/png" href={baseUrl + "/icon.png"} />
+		<link rel="icon" href={baseUrl + "/icon.ico"} />
+		<link rel="manifest" href={baseUrl + "/manifest.json"} />
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Fugaz+One&family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -18,16 +20,16 @@ import "../scss/site.scss";
 	</head>
 	<body id="root">
 		<slot />
-		<script>
+		<script define:vars={{ baseUrl }}>
 			if ('serviceWorker' in navigator) {
 				window.addEventListener('load', () => {
-					let baseUrl = import.meta.env.BASE_URL || "/";
+					let baseUrlScript = baseUrl || "/";
 
-					if (!baseUrl.endsWith('/')) {
-						baseUrl += '/';
+					if (!baseUrlScript.endsWith('/')) {
+						baseUrlScript += '/';
 					}
 
-					navigator.serviceWorker.register(baseUrl + 'service-worker.js').then(registration => {
+					navigator.serviceWorker.register(baseUrlScript + 'service-worker.js').then(registration => {
 						console.log('ServiceWorker registration successful with scope: ', registration.scope);
 					}).catch(error => {
 						console.log('ServiceWorker registration failed: ', error);
