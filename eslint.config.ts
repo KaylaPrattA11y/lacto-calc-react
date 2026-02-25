@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
+import pluginJsxA11y from "eslint-plugin-jsx-a11y";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
@@ -15,8 +16,8 @@ export default defineConfig([
       "src/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
       "*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
     ],
-    plugins: { js },
-    extends: ["js/recommended"],
+    plugins: { js, "jsx-a11y": pluginJsxA11y },
+    rules: { ...pluginJsxA11y.configs.strict.rules },
     languageOptions: { globals: globals.browser },
   },
   ...tseslint.configs.recommended,

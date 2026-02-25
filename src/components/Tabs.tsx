@@ -219,6 +219,7 @@ export default function Tabs({
         .join(' ')}>
       <div
         role="tablist"
+        tabIndex={0}
         aria-orientation={orientation}
         aria-label={tablistLabel}
         className="tabs--tablist"
@@ -279,7 +280,6 @@ export default function Tabs({
               role="tabpanel"
               aria-labelledby={id}
               hidden={!isActive}
-              tabIndex={0}
               className={['tabs--tabpanel', isActive ? 'is-active' : 'is-hidden'].join(' ')}>
               {tab.content}
             </div>
