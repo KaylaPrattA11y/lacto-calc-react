@@ -3,11 +3,10 @@ import { HiBellAlert, HiClock } from "react-icons/hi2";
 import Details from "../Details";
 import { type FermentEntry } from "../../types";
 import { formatter, getFormattedVal } from "../../utils/formatter";
-import { getDuration, getRemainingDuration } from "../../utils/time";
+import { getDuration, getFermentStatus, getRemainingDuration } from "../../utils/time";
 
 export default function NarrowViewCol(originalRowProps : FermentEntry) {
   const { 
-    status,
     fermentName, 
     brinePercentage, 
     dateStart, 
@@ -22,6 +21,7 @@ export default function NarrowViewCol(originalRowProps : FermentEntry) {
   const start = dateStart ? new Date(dateStart) : undefined;
   const end = dateEnd ? new Date(dateEnd) : undefined;
   const remainingDuration = (dateStart && dateEnd) ? getRemainingDuration(dateStart, dateEnd) : undefined;
+  const status = getFermentStatus(dateStart, dateEnd);
 
   return (
     <div className="ferment-list--narrow-cell">
