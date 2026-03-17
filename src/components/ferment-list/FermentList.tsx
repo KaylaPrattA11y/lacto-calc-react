@@ -189,12 +189,11 @@ export default function FermentList() {
     const search = String(filterValue ?? '').trim().toLowerCase();
     if (!search) return true;
 
-    const { fermentName, notes, status, dateStart, dateEnd, brinePercentage, weight, saltRequired, tags } = row.original;
+    const { fermentName, notes, dateStart, dateEnd, brinePercentage, weight, saltRequired, tags } = row.original;
 
     const values: Array<string | number | undefined> = [
       fermentName,
       notes,
-      status,
       dateStart,
       dateEnd,
       brinePercentage,

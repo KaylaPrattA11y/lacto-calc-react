@@ -32,7 +32,6 @@ export type FermentEntry = {
   dateCreated: string | Date; // required, Date object output for when the ferment entry was created
   fermentName?: string; // optional, string value for the name of the ferment
   notes?: string; // optional, string value for any notes about the ferment
-  status?: FermentStatus; // optional, status of the ferment ('Planned', 'Active', 'Complete')
   dateStart?: string; // optional, ISO date string (YYYY-MM-DD) for the start date of the ferment
   dateEnd?: string; // optional, ISO date string (YYYY-MM-DD) for the end date of the ferment
   sendNotification?: boolean; // optional, boolean indicating if notification is set for ferment completion

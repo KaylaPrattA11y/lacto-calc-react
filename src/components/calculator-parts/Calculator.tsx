@@ -84,7 +84,6 @@ export default function Calculator({ tabsController, isSmallScreen }: { tabsCont
       saltRequired: saltRequired || 0,
       fermentName: fermentName || generateFermentName(),
       notes,
-      status: getFermentStatus(dateStart, dateEnd),
       dateCreated: new Date(),
       dateStart,
       dateEnd,

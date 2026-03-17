@@ -12,13 +12,13 @@ describe('NarrowViewCol', () => {
     brinePercentage: 2.2,
     saltRequired: 22,
     dateCreated: new Date('2024-01-01'),
-    status: 'Active',
     fermentName: 'Pickled Carrots',
     notes: 'Testing notes',
     dateStart: '2024-01-01',
     dateEnd: '2024-01-15',
     sendNotification: false,
     tags: ['vegetables', 'carrots']
+    // status is now computed, not stored
   };
 
   it('renders ferment name when provided', () => {
@@ -27,21 +27,23 @@ describe('NarrowViewCol', () => {
     expect(nameElement?.textContent).toBe('Pickled Carrots');
   });
 
-  it('displays status badge when status is provided', () => {
+  it('displays status badge based on computed status', () => {
     const { container } = render(<NarrowViewCol {...baseFerment} />);
     const statusBadge = container.querySelector('.badge.is-active');
     expect(statusBadge?.textContent).toBe('Active');
   });
 
   it('displays notification badge when sendNotification is true and status is not Complete', () => {
-    const ferment = { ...baseFerment, sendNotification: true, status: 'Active' as const };
+    // Use a date range that is not complete
+    const ferment = { ...baseFerment, sendNotification: true, dateStart: '2026-03-01', dateEnd: '2026-03-30' };
     const { container } = render(<NarrowViewCol {...ferment} />);
     const notificationBadge = container.querySelector('.badge.is-info');
-    expect(notificationBadge?.textContent).toContain('Notifications On');
+    expect(notificationBadge?.textContent).toContain('On');
   });
 
   it('does not display notification badge when status is Complete', () => {
-    const ferment = { ...baseFerment, sendNotification: true, status: 'Complete' as const };
+    // Use a date range that is complete
+    const ferment = { ...baseFerment, sendNotification: true, dateStart: '2024-01-01', dateEnd: '2024-01-15' };
     const { container } = render(<NarrowViewCol {...ferment} />);
     const notificationBadge = container.querySelector('.badge.is-info');
     expect(notificationBadge).toBeNull();

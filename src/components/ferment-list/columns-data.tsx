@@ -1,6 +1,6 @@
 import React from "react";
 import { HiPencil, HiTrash, HiShare } from "react-icons/hi";
-import { getDuration, getRemainingDuration } from "../../utils/time";
+import { getDuration, getFermentStatus, getRemainingDuration } from "../../utils/time";
 import { getFormattedVal } from '../../utils/formatter';
 import { formatter } from "../../utils/formatter";
 import IconButton from '../IconButton';
@@ -15,14 +15,20 @@ function getColumnsData({columnHelper, data, setData}: ColumnsDataProps) {
       id: 'narrowViewCol',
       cell: props => <NarrowViewCol {...props.row.original} />,
     }),
-    columnHelper.accessor('status', {
-      header: 'Status',
-      id: 'status',
-      cell: props => <span className={`badge is-${props.row.original.status?.toLowerCase()}`}>{props.row.original.status}</span>,
-      enableSorting: true,
-      sortingFn: 'alphanumeric',
-      enableColumnFilter: true,
-    }),
+    columnHelper.accessor(
+      row => getFermentStatus(row.dateStart, row.dateEnd),
+      {
+        id: 'status',
+        header: 'Status',
+        cell: props => {
+          const status = props.getValue();
+          return <span className={`badge is-${status?.toLowerCase()}`}>{status}</span>;
+        },
+        enableSorting: true,
+        sortingFn: 'alphanumeric',
+        enableColumnFilter: true,
+      }
+    ),
     columnHelper.accessor('dateCreated', {
       header: 'Created',
       id: 'dateCreated',
