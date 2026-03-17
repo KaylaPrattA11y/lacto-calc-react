@@ -19,6 +19,8 @@ declare global {
   }
 }
 
+export type TableView = 'table' | 'grid';
+
 export type FermentStatus = 'Planned' | 'Active' | 'Complete' | undefined;
 
 export type SetFermentData = React.Dispatch<React.SetStateAction<FermentEntry[]>>;

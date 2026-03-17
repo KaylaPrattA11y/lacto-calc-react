@@ -8,6 +8,7 @@ import Calculator from "./calculator-parts/Calculator";
 import FermentList from "./ferment-list/FermentList";
 import Spinner from "./Spinner";
 import { PwaContext, NotificationsContext } from "./SpecialFeaturesContext";
+import getInitialState from "../utils/getInitialState";
 
 declare global {
   interface Window {
@@ -34,7 +35,8 @@ export default function Page({ pageTitle, children }: { pageTitle: string; child
   const [canInstallPwa, setCanInstallPwa] = useState<boolean | null>(null);
   const [canReceiveNotifications, setCanReceiveNotifications] = useState<boolean | null>(null);
   const clientEnv = getClientEnv();
-  const tabsController = useTabsController('calculator');
+  const initialActiveId = getInitialState().activeTabpanel;
+  const tabsController = useTabsController(initialActiveId);
 
   // Set up PWA install prompt event listener
   useEffect(() => {
@@ -166,6 +168,13 @@ export default function Page({ pageTitle, children }: { pageTitle: string; child
             <main className="page-main" data-client-env={clientEnv}>
               <h1 className="visually-hidden">{pageTitle}</h1>
               <Tabs 
+                initialActiveId={initialActiveId}
+                onChange={(newActiveId) => {
+                  tabsController.setActiveId(newActiveId);
+                  if (typeof window !== 'undefined' && window.localStorage) {
+                    localStorage.setItem('lftState', JSON.stringify({ ...getInitialState(), activeTabpanel: newActiveId }));
+                  }
+                }}
                 tabs={tabs} 
                 orientation={isSmallScreen ? "horizontal" : "vertical"}
                 controller={tabsController}

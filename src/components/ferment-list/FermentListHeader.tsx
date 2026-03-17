@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { 
   HiOutlineDownload, 
   HiOutlineUpload,
   HiTrash,
   HiBadgeCheck,
-  HiExclamation
+  HiExclamation,
+  HiOutlineTable,
+  HiOutlineViewGrid
 } from "react-icons/hi";
-import type { FermentEntry, SetFermentData } from "../../types";
+import type { FermentEntry, SetFermentData, TableView } from "../../types";
 import IconButton from "../IconButton";
 import { toast, type ToastContentProps } from "react-toastify";
 import importFermentEntries from "../../utils/importFermentEntries";
+import getInitialState from "../../utils/getInitialState";
 
 function DeleteEntriesToast({ closeToast }: ToastContentProps) {
   return ( 
@@ -40,7 +43,16 @@ function ImportEntriesToast({ closeToast }: ToastContentProps) {
   )
 }
 
-export default function FermentListHeader({data, setData}: {data: FermentEntry[], setData: SetFermentData}) {
+interface FermentListHeaderProps {
+  data: FermentEntry[];
+  setData: SetFermentData;
+}
+
+
+export default function FermentListHeader({data, setData}: FermentListHeaderProps) {
+  // Initialize from localStorage if available, else fallback to window width
+  const [tableView, setTableView] = useState<TableView>(getInitialState().tableView);
+
   function deleteFermentEntries() {
     localStorage.removeItem('fermentData');
     // Dispatch custom event to notify FermentList of data deletion
@@ -68,6 +80,27 @@ export default function FermentListHeader({data, setData}: {data: FermentEntry[]
   return (
     <div className="ferment-list--header">
       <div className="btn-group">
+        <IconButton 
+          type="button"
+          role="switch"
+          aria-checked={tableView === "table"}
+          label="Toggle View"
+          variant="secondary"
+          size="sm"
+          alignment="bottom"
+          onClick={event => {
+            const isChecked = event.currentTarget.getAttribute('aria-checked') === 'true';
+            const newView = isChecked ? 'grid' : 'table';
+            event.currentTarget.setAttribute('aria-checked', String(!isChecked));
+            setTableView(newView);
+            if (typeof window !== 'undefined' && window.localStorage) {
+              localStorage.setItem('lftState', JSON.stringify({ ...getInitialState(), tableView: newView }));
+            }
+            window.dispatchEvent(new CustomEvent('toggleFermentListLayout', { detail: { view: newView } }));
+          }}
+        >
+          {tableView === "table" ? <HiOutlineViewGrid size={18} /> : <HiOutlineTable size={18} />}
+        </IconButton>
         <IconButton 
           label="Export (.json)"
           variant="primary"

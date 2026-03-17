@@ -1,20 +1,31 @@
 import React from "react";
 import { HiSearch } from "react-icons/hi";
 import Input from "../Input";
+import type { FermentStatus } from "../../types";
+import getInitialState from "../../utils/getInitialState";
 
 interface FiltersProps {
   globalFilter: string;
   setGlobalFilter: (filter: string) => void;
-  statusFilter: string;
-  setStatusFilter: (filter: string) => void;
+  statusFilter: FermentStatus;
+  setStatusFilter: (filter: FermentStatus) => void;
 }
 
 export default function FermentListFilters({ globalFilter, setGlobalFilter, statusFilter, setStatusFilter }: FiltersProps) {
+  const initialStatusFilter = getInitialState().fermentStatusFilter;
   return (
     <div className="ferment-list--filters">
       <select 
-        onChange={e => setStatusFilter(e.target.value)} 
+        onChange={e => {
+          const fermentStatus = e.target.value as FermentStatus;
+          
+          setStatusFilter(fermentStatus);
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem('lftState', JSON.stringify({ ...getInitialState(), fermentStatusFilter: fermentStatus }));
+          }
+        }} 
         aria-label="Filter ferments" 
+        defaultValue={initialStatusFilter}
         value={statusFilter}
         name="status"
       >

@@ -19,7 +19,8 @@ import {
   flexRender, 
 } from '@tanstack/react-table'
 import { 
-  type FermentEntry, 
+  type FermentEntry,
+  type FermentStatus,
 } from "../../types";
 import NoDataAvailable from './NoDataAvailable';
 import FermentListHeader from './FermentListHeader';
@@ -28,15 +29,18 @@ import Spinner from '../Spinner';
 import FermentListFilters from './FermentListFilters';
 import FermentListFooter from './FermentListFooter';
 import FermentListPagination from './FermentListPagination';
+import getInitialState from "../../utils/getInitialState";
 
 const fallbackData = [] as FermentEntry[];
 
 export default function FermentList() {
+  const [lftState, setLftState] = useState(getInitialState());
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<FermentEntry[]>([]);
   const [globalFilter, setGlobalFilter] = useState<string>('');
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [statusFilter, setStatusFilter] = useState<string>('Active');
+  const [statusFilter, setStatusFilter] = useState<FermentStatus>(lftState.fermentStatusFilter);
+  
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'dateCreated', desc: true }
   ]);
@@ -64,7 +68,7 @@ export default function FermentList() {
 
   function updateColumnVisibilityForWidth() {
     const width = window.innerWidth;
-    if (!width) return;
+    if (!width || lftState.tableView === "grid") return;
 
     if (width >= 2000) {
       // extra wide
@@ -160,19 +164,37 @@ export default function FermentList() {
   }
   const debouncedResize = useDebouncedCallback(updateColumnVisibilityForWidth, 300);
 
-  // Update column visibility based on table width
+  // Update column visibility based on table width or view on mount
   useEffect(() => {
+    if (lftState.tableView === 'grid') {
+      setColumnVisibility({
+        narrowViewCol: true,
+        status: false,
+        dateCreated: false,
+        fermentName: false,
+        brinePercentage: false,
+        weight: false,
+        saltRequired: false,
+        dateStart: false,
+        dateEnd: false,
+        colTotalDuration: false,
+        colRemainingDuration: false,
+        notes: false,
+        tags: false,
+        actions: true,
+      });
+    } else {
+      debouncedResize();
+    }
     // Watch window resize
     window.addEventListener('resize', debouncedResize);
-    
     // Run once on mount (defer to ensure table is laid out)
     const timeoutId = setTimeout(debouncedResize, 0);
-
     return () => {
       window.removeEventListener('resize', debouncedResize);
       clearTimeout(timeoutId);
     };
-  }, [debouncedResize]);
+  }, [debouncedResize, lftState.tableView]);
  
   const columnHelper = createColumnHelper<FermentEntry>();
   const columns = useMemo(() => getColumnsData({ columnHelper, data, setData }), [data, setData]);
@@ -272,6 +294,40 @@ export default function FermentList() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleToggleLayout = (event: CustomEvent<{ view: "table" | "grid" }>) => {
+      const { view } = event.detail;
+
+      setLftState(prev => ({ ...prev, tableView: view }));
+      if (view === "grid") {
+        setColumnVisibility({
+          narrowViewCol: true,
+          status: false,
+          dateCreated: false,
+          fermentName: false,
+          brinePercentage: false,
+          weight: false,
+          saltRequired: false,
+          dateStart: false,
+          dateEnd: false,
+          colTotalDuration: false,
+          colRemainingDuration: false,
+          notes: false,
+          tags: false,
+          actions: true,
+        });
+      } else {
+        updateColumnVisibilityForWidth();
+      }
+    };
+
+    window.addEventListener('toggleFermentListLayout', handleToggleLayout as EventListener);
+    return () => {
+      window.removeEventListener('toggleFermentListLayout', handleToggleLayout as EventListener);
+    };
+
+  }, []);
+
   // Update table data when ferment list changes
   useEffect(() => {
     table.setOptions(prev => ({
@@ -295,7 +351,7 @@ export default function FermentList() {
           setGlobalFilter={setGlobalFilter} 
           statusFilter={statusFilter}
           setStatusFilter={setStatusFilter} />
-        <table className='ferment-list'>
+        <table className='ferment-list' data-view={lftState.tableView}>
           <thead>
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>

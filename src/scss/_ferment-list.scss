@@ -7,11 +7,37 @@
       text-align: left;
     }
     :where(th, td) {
-      padding: 0.5rem;
-      border-block-end: 1px solid var(--border);
       vertical-align: top;
-      > .ferment-list--cell {
-        max-inline-size: 35ch;
+      padding: 0.5rem;
+    }
+    @container page-main (width >= 550px) {
+      &[data-view="table"] {
+        :where(th, td) {
+          border-block-end: 1px solid var(--border);
+          > .ferment-list--cell {
+            max-inline-size: 35ch;
+          }
+        }
+      }
+      &[data-view="grid"] {
+        display: block;
+        thead {
+          display: none;
+        }
+        tbody {
+          padding: 1rem;
+          display: grid;
+          gap: 1rem;
+          @container ferment-list (width >= 300px) {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          }
+        }
+        tr {
+          display: block;
+          border: 1px solid var(--border);
+          border-radius: var(--border-radius);
+          padding: 0.5rem;
+        }
       }
     }
     &--name {
