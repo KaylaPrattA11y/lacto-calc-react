@@ -3,7 +3,7 @@
   "short_name": "LFT",
   "name": "Lacto-Ferment Tools (LFT)",
   "description": "A tool to calculate and record the necessary ingredients and fermentation times for lacto-fermentation projects.",
-  "scope": "/lacto-calc-react/",
+  "scope": "/lft/",
   "icons": [
     {
       "src": "android-launchericon-96-96.png",
@@ -28,7 +28,7 @@
   ],
   "background_color": "#0b3142",
   "theme_color": "#b74c56",
-  "start_url": "/lacto-calc-react/?utm_source=web_app_manifest",
+  "start_url": "/lft/?utm_source=web_app_manifest",
   "display": "standalone",
   "orientation": "any"
 }
